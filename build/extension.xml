@@ -1,0 +1,16 @@
+<extension xmlns="http://ns.adobe.com/air/extension/3.5">
+	<id>com.studiopixmix.anes.InAppPurchase</id>
+	<versionNumber>0.0.1</versionNumber>
+	<platforms>
+		<platform name="iPhone-ARM">
+			<applicationDeployment>
+				<nativeLibrary>libInAppPurchase.a</nativeLibrary>
+				<initializer>InAppPurchaseANEInitializer</initializer>
+				<finalizer>InAppPurchaseANEFinalizer</finalizer>
+			</applicationDeployment>
+		</platform>
+		<platform name="default">
+			<applicationDeployment/>
+		</platform>
+	</platforms>
+</extension>
