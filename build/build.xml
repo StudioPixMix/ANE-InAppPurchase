@@ -107,8 +107,7 @@
 	<target name="android.swc" description="Build Android SWC library">
 		<echo message="Building Android SWC library ..."/>
 		<fileset dir="../actionscript" casesensitive="yes" id="classfiles.android">
-			<include name="android/src/**/*.as" />
-			<include name="common/src/**/*.as" />
+			<include name="src/**/*.as" />
 		</fileset>
 
 		<pathconvert property="classlist.android" refid="classfiles.android" pathsep=" " dirsep=".">
@@ -117,8 +116,7 @@
 
 		<exec executable="${flex.sdk}/bin/compc${bat.ext}" failonerror="true">
 			<env key="AIR_SDK_HOME" value="${flex.sdk}"/>
-			<arg line='-source-path ../actionscript/android/src' />
-			<arg line='-source-path+=../actionscript/common/src' />
+			<arg line='-source-path ../actionscript/src' />
 			<arg line='-output ../bin/actionscript/android/${name}.swc' />
 			<arg line='-swf-version=13' />
 			<arg line='-external-library-path+="${flex.sdk}/frameworks/libs/air/airglobal.swc"' />
