@@ -1,6 +1,5 @@
 package com.studiopixmix.anes.inapppurchase;
 
-import sun.util.logging.resources.logging;
 import android.util.Log;
 
 import com.adobe.fre.FREContext;
@@ -14,6 +13,8 @@ public class InAppPurchaseExtension implements FREExtension {
 	// PROPERTIES :
 	/** The logging TAG. */
 	public static String TAG = "InAppPurchaseExtension";
+	/** A reference to the InAppPurchase extension context. */
+	public static InAppPurchaseExtensionContext iapContext;
 	
 	
 	// METHODS :
@@ -22,7 +23,8 @@ public class InAppPurchaseExtension implements FREExtension {
 	 */
 	@Override
 	public FREContext createContext(String type) {
-		return new InAppPurchaseExtensionContext();
+		iapContext = new InAppPurchaseExtensionContext();
+		return iapContext;
 	}
 	
 	@Override
@@ -60,5 +62,14 @@ public class InAppPurchaseExtension implements FREExtension {
 	 */
 	public static void logE(String message) {
 		Log.e(TAG, message);
+	}
+	
+	/**
+	 * Logs the given message to the ActionScript part using a StatusEvent, if the context
+	 * exists. If it does not exist, does nothing.
+	 */
+	public static void logToAS(String message) {
+		if(iapContext != null)
+			iapContext.dispatchStatusEventAsync(InAppPurchaseMessage.LOG, "[" + TAG + "] : " + message);
 	}
 }
