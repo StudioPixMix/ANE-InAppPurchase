@@ -36,47 +36,35 @@
 	<target name="android" description="Build android Library">
 		<echo message="Build android library ..."/>
 		
+		<delete file="../bin/android/${name}.jar" />
+		<delete dir="../bin/android/res" />
+		
 		<delete dir="../bin/android/temp" />
 		<mkdir dir="../bin/android/temp/classes" />
 
 		<javac destdir="../bin/android/temp/classes" includeantruntime="false" target="1.6" source="1.6" fork="yes" executable="${javac.dir}/javac${bin.ext}">
 			<src path="../android/src" />
-			<src path="${mopub.android.sdk}/mopub-sdk/src/main/java" />
 			<classpath>
 				<pathelement location="${android.sdk}/android.jar" />
 				<pathelement location="${flex.sdk}/lib/android/FlashRuntimeExtensions.jar"/>
 				<pathelement location="${android.supportV4}/android-support-v4.jar" />
-				<pathelement location="../android/libs/chartboost.jar"/>
-				<pathelement location="../android/libs/inmobi.jar"/>
-				<pathelement location="../android/libs/adcolony.jar"/>
-				<pathelement location="../android/libs/smartadserver.jar"/>
-				<pathelement location="../android/libs/google-play-services.jar"/>
 			</classpath>
 		</javac>
 
 		<mkdir dir="../bin/android/temp/zip" />
-		<unzip dest="../bin/android/temp/zip" src="${android.supportV4}/android-support-v4.jar" />
-		<unzip dest="../bin/android/temp/zip" src="../android/libs/chartboost.jar" />
-		<unzip dest="../bin/android/temp/zip" src="../android/libs/inmobi.jar" />
-		<unzip dest="../bin/android/temp/zip" src="../android/libs/adcolony.jar" />
-		<unzip dest="../bin/android/temp/zip" src="../android/libs/smartadserver.jar" />
 		
-		<copy todir="../bin/android/temp/classes/com">
-			<fileset dir="../bin/android/temp/zip/com" />
-		</copy>
+		<!-- Uncomment if you don't already have android-support-v4.jar included in your project through another ANE -->
+		<!--
+		<unzip dest="../bin/android/temp/zip" src="${android.supportV4}/android-support-v4.jar" />
 		<copy todir="../bin/android/temp/classes/android">
 			<fileset dir="../bin/android/temp/zip/android" />
 		</copy>
+		-->
 		
 		<jar basedir="../bin/android/temp/classes" destfile="../bin/android/${name}.jar"/>
 		<delete dir="../bin/android/temp"/>
 		
-		<!--
-		<delete dir="../bin/android/resources"/>
-		<copy todir="../bin/android/resources">
-			<fileset dir="../android/resources"/>
-		</copy>
-		-->
+		<echo message="Copying resources ..." />
 		
 		<echo message="Done."/>
 	</target>

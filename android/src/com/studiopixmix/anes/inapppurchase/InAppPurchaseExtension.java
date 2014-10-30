@@ -70,6 +70,6 @@ public class InAppPurchaseExtension implements FREExtension {
 	 */
 	public static void logToAS(String message) {
 		if(iapContext != null)
-			iapContext.dispatchStatusEventAsync(InAppPurchaseMessage.LOG, "[" + TAG + "] : " + message);
+			iapContext.dispatchStatusEventAsync(InAppPurchaseMessages.LOG, "[" + TAG + "] : " + message);
 	}
 }
