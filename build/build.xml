@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Air Native Extension Build Scripts" default="all">
+
+	<!-- Config -->
+	<property file="build.config" />
+
+	<!-- All -->
+	<target name="all" depends="ios,android,ios.swc,android.swc,default.swc,swf,package" description="Full build of extension" />
+
+	<!-- iOS -->
+	<target name="ios" description="Build iOS Library">
+		<mkdir dir="../temp/ios/build/" />
+
+		<exec executable="xcodebuild" failonerror="true" dir="../ios/${name}IosExtension">
+			<arg line='-project ${name}IosExtension.xcodeproj' />
+			<arg line='-target ${name}IosExtension' />
+			<arg line='-configuration Release' />
+			<arg line='SYMROOT=../../temp/ios/build/' />
+		</exec>
+
+		<copy file="../temp/ios/build/Release-iphoneos/lib${name}IosExtension.a" todir="../bin/ios" overwrite="true" />
+		<copy todir="../bin/ios">
+            <fileset dir="../ios/MoPubIosExtension/AdColony/SDK" />
+			<fileset dir="../ios/MoPubIosExtension/VidCoin/SDK" />
+            <fileset dir="../ios/MoPubIosExtension/Mobvious/SDK">
+                <include name="sas.bundle" />
+            </fileset>
+		</copy>
+
+		<exec executable="ibtool" failonerror="true">
+			<arg value="--errors" />
+			<arg value="--warnings" />
+			<arg value="--notices" />
+			<arg line="--output-format human-readable-text" />
+			<arg line="--sdk ${ios.sdk}" />
+			<arg line="--compile ../bin/ios/MPAdBrowserController.nib" />
+			<arg value="${mopub.ios.sdk}/MoPubSDK/Internal/Common/MPAdBrowserController.xib" />
+		</exec>
+
+		<copy todir="../bin/ios" flatten="true">
+			<fileset dir="${mopub.ios.sdk}/MoPubSDK" casesensitive="yes" id="classfiles">
+				<include name="**/*.png" />
+				<include name="**/*.nib" />
+				<include name="**/*.js" />
+			</fileset>
+		</copy>
+
+		<delete dir="../temp" />
+	</target>
+	
+	<!-- Android -->
+	<target name="android" description="Build android Library">
+		<echo message="Build android library ..."/>
+		
+		<delete dir="../bin/android/temp" />
+		<mkdir dir="../bin/android/temp/classes" />
+
+		<javac destdir="../bin/android/temp/classes" includeantruntime="false" target="1.6" source="1.6" fork="yes" executable="${javac.dir}/javac${bin.ext}">
+			<src path="../android/src" />
+			<src path="${mopub.android.sdk}/mopub-sdk/src/main/java" />
+			<classpath>
+				<pathelement location="${android.sdk}/android.jar" />
+				<pathelement location="${flex.sdk}/lib/android/FlashRuntimeExtensions.jar"/>
+				<pathelement location="${android.supportV4}/android-support-v4.jar" />
+				<pathelement location="../android/libs/chartboost.jar"/>
+				<pathelement location="../android/libs/inmobi.jar"/>
+				<pathelement location="../android/libs/adcolony.jar"/>
+				<pathelement location="../android/libs/smartadserver.jar"/>
+				<pathelement location="../android/libs/google-play-services.jar"/>
+			</classpath>
+		</javac>
+
+		<mkdir dir="../bin/android/temp/zip" />
+		<unzip dest="../bin/android/temp/zip" src="${android.supportV4}/android-support-v4.jar" />
+		<unzip dest="../bin/android/temp/zip" src="../android/libs/chartboost.jar" />
+		<unzip dest="../bin/android/temp/zip" src="../android/libs/inmobi.jar" />
+		<unzip dest="../bin/android/temp/zip" src="../android/libs/adcolony.jar" />
+		<unzip dest="../bin/android/temp/zip" src="../android/libs/smartadserver.jar" />
+		
+		<copy todir="../bin/android/temp/classes/com">
+			<fileset dir="../bin/android/temp/zip/com" />
+		</copy>
+		<copy todir="../bin/android/temp/classes/android">
+			<fileset dir="../bin/android/temp/zip/android" />
+		</copy>
+		
+		<jar basedir="../bin/android/temp/classes" destfile="../bin/android/${name}.jar"/>
+		<delete dir="../bin/android/temp"/>
+		
+		<!--
+		<delete dir="../bin/android/resources"/>
+		<copy todir="../bin/android/resources">
+			<fileset dir="../android/resources"/>
+		</copy>
+		-->
+		
+		<echo message="Done."/>
+	</target>
+	
+	<!-- ActionScript iOS -->
+	<target name="ios.swc" description="Build iOS SWC library">
+		<echo message="Building iOS SWC library ..."/>
+		<fileset dir="../actionscript" casesensitive="yes" id="classfiles.ios">
+			<include name="ios/src/**/*.as" />
+			<include name="common/src/**/*.as" />
+		</fileset>
+
+		<pathconvert property="classlist.ios" refid="classfiles.ios" pathsep=" " dirsep=".">
+			<regexpmapper from=".*src.(.*)\.as" to="\1" />
+		</pathconvert>
+
+		<exec executable="${flex.sdk}/bin/compc${bat.ext}" failonerror="true">
+			<env key="AIR_SDK_HOME" value="${flex.sdk}"/>
+			<arg line='-source-path ../actionscript/ios/src' />
+			<arg line='-source-path+=../actionscript/common/src' />
+			<arg line='-output ../bin/actionscript/ios/${name}.swc' />
+			<arg line='-swf-version=13' />
+			<arg line='-external-library-path+="${flex.sdk}/frameworks/libs/air/airglobal.swc"' />
+			<arg line='-include-classes ${classlist.ios}' />
+		</exec>
+		<echo message="Done."/>
+	</target>
+
+	<!-- ActionScript Android -->
+	<target name="android.swc" description="Build Android SWC library">
+		<echo message="Building Android SWC library ..."/>
+		<fileset dir="../actionscript" casesensitive="yes" id="classfiles.android">
+			<include name="android/src/**/*.as" />
+			<include name="common/src/**/*.as" />
+		</fileset>
+
+		<pathconvert property="classlist.android" refid="classfiles.android" pathsep=" " dirsep=".">
+			<regexpmapper from=".*src.(.*)\.as" to="\1" />
+		</pathconvert>
+
+		<exec executable="${flex.sdk}/bin/compc${bat.ext}" failonerror="true">
+			<env key="AIR_SDK_HOME" value="${flex.sdk}"/>
+			<arg line='-source-path ../actionscript/android/src' />
+			<arg line='-source-path+=../actionscript/common/src' />
+			<arg line='-output ../bin/actionscript/android/${name}.swc' />
+			<arg line='-swf-version=13' />
+			<arg line='-external-library-path+="${flex.sdk}/frameworks/libs/air/airglobal.swc"' />
+			<arg line='-include-classes ${classlist.android}' />
+		</exec>
+		<echo message="Done."/>
+	</target>
+
+	<!-- ActionScript default -->
+	<target name="default.swc" description="Build default SWC library">
+		<echo message="Building default SWC library ..."/>
+		<fileset dir="../actionscript" casesensitive="yes" id="classfiles.default">
+			<include name="default/src/**/*.as" />
+			<include name="common/src/**/*.as" />
+		</fileset>
+
+		<pathconvert property="classlist.default" refid="classfiles.default" pathsep=" " dirsep=".">
+			<regexpmapper from=".*src.(.*)\.as" to="\1" />
+		</pathconvert>
+
+		<exec executable="${flex.sdk}/bin/compc${bat.ext}" failonerror="true">
+			<env key="AIR_SDK_HOME" value="${flex.sdk}"/>
+			<arg line='-source-path ../actionscript/default/src' />
+			<arg line='-source-path+=../actionscript/common/src' />
+			<arg line='-output ../bin/actionscript/default/${name}.swc' />
+			<arg line='-swf-version=13' />
+			<arg line='-external-library-path+="${flex.sdk}/frameworks/libs/air/airglobal.swc"' />
+			<arg line='-include-classes ${classlist.default}' />
+		</exec>
+		<echo message="Done."/>
+	</target>
+	
+	<!-- Propagate library.swf -->
+	<target name="swf" description="Extract and propagate library.swf">
+		<echo message="Extracting library.swf for iOS ..."/>
+		<mkdir dir="../bin/actionscript/ios/content" />
+		<unzip src="../bin/actionscript/ios/${name}.swc" dest="../bin/actionscript/ios/content" overwrite="true" />
+		<copy file="../bin/actionscript/ios/content/library.swf" todir="../bin/ios" overwrite="true" />
+		<delete dir="../bin/actionscript/ios/content"/>
+		
+		<echo message="Extracting library.swf for Android ..."/>
+		<mkdir dir="../bin/actionscript/android/content" />
+		<unzip src="../bin/actionscript/android/${name}.swc" dest="../bin/actionscript/android/content" overwrite="true" />
+		<copy file="../bin/actionscript/android/content/library.swf" todir="../bin/android" overwrite="true" />
+		<delete dir="../bin/actionscript/android/content"/>
+		
+		<echo message="Extracting default library.swf ..."/>
+		<mkdir dir="../bin/actionscript/default/content" />
+		<unzip src="../bin/actionscript/default/${name}.swc" dest="../bin/actionscript/default/content" overwrite="true" />
+		<copy file="../bin/actionscript/default/content/library.swf" todir="../bin/default" overwrite="true" />
+		<delete dir="../bin/actionscript/default/content" />
+		
+		<echo message="Done."/>
+	</target>
+
+	<!-- Packaging -->
+	<target name="package" description="Create the extension package">
+		<echo message="Packaging the ANE ..."/>
+		<exec executable="${flex.sdk}/bin/adt${bat.ext}" failonerror="true" dir="../bin">
+            <arg value="-package"/>
+            <arg value="-target"/>
+            <arg value="ane"/>
+            <arg value="${name}.ane"/>
+            <arg value="../build/extension.xml"/>
+            <arg line="-swc actionscript/default/${name}.swc"/>
+            <arg line="-platform iPhone-ARM -platformoptions ../build/platform.xml -C ios/ ."/>
+            <arg line="-platform Android-ARM -C android/ ."/>
+			<arg line="-platform Android-x86 -C android/ ."/>
+            <arg line="-platform default -C default/ ."/>
+        </exec>
+		<copy file="../bin/actionscript/default/${name}.swc" todir="../bin" overwrite="true"/>
+		<echo message="Done."/>
+	</target>
+	
+	<!-- Export -->
+	<target name="export" description="Export the compiled ANE">
+		<echo message="Exporting the compiled ANE to ${export.dir} ..."/>
+		<copy file="../bin/${name}.ane" todir="${export.dir}" overwrite="true"/>
+		<echo message="Done."/>
+	</target>
+	
+	<!-- Extract AppsFire resources from JAR -->
+	<target name="appsfire" description="Prepares AppsFire SDK : extract AppsFire resources and strip conflicting resource : GCM">
+		<echo message="Extracting resources and stripping GCM from AppsFire SDK ..." />
+		<unzip src="../android/libs/afAdSdk.jar" dest="../android/libs/temp" />
+		
+		<!-- Extract resources -->
+		<delete dir="../android/resources"/>
+		<move todir="../android/resources">
+			<fileset file="../android/libs/temp/com/appsfire/adUnitJAR/resources/*" />
+		</move>
+		<delete dir="../android/libs/temp/com/appsfire/adUnitJAR/resources" />
+		
+		<!-- Strip GCM. Comment this if GCM is not conflicting with your other ANEs -->
+		<delete dir="../android/libs/temp/com/google/android/" />
+		
+		<!-- Repackage the SDK -->
+		<jar basedir="../android/libs/temp" destfile="../android/libs/appsfire.jar" />
+		<delete dir="../android/libs/temp" />
+		<delete file="../android/libs/afAdSdk.jar" />
+		
+		<echo message="Done."/>
+	</target>
+</project>
