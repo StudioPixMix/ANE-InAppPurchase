@@ -20,15 +20,6 @@
 
 		<copy file="../temp/ios/build/Release-iphoneos/lib${name}IosExtension.a" todir="../bin/ios" overwrite="true" />
 
-
-		<exec executable="ibtool" failonerror="true">
-			<arg value="--errors" />
-			<arg value="--warnings" />
-			<arg value="--notices" />
-			<arg line="--output-format human-readable-text" />
-			<arg line="--sdk ${ios.sdk}" />
-		</exec>
-
 		<delete dir="../temp" />
 	</target>
 	
@@ -73,7 +64,7 @@
 	<target name="ios.swc" description="Build iOS SWC library">
 		<echo message="Building iOS SWC library ..."/>
 		<fileset dir="../actionscript" casesensitive="yes" id="classfiles.ios">
-			<include name="ios/src/**/*.as" />
+			<include name="src/**/*.as" />
 		</fileset>
 
 		<pathconvert property="classlist.ios" refid="classfiles.ios" pathsep=" " dirsep=".">
@@ -86,9 +77,9 @@
 			<arg line='-output ../bin/actionscript/ios/${name}.swc' />
 			<arg line='-swf-version=13' />
 			<arg line='-external-library-path+="${flex.sdk}/frameworks/libs/air/airglobal.swc"' />
+			<arg line='-include-classes ${classlist.ios}' />
 		</exec>
 		<echo message="Done."/>
-			<arg line='-include-classes ${classlist.ios}' />
 	</target>
 
 	<!-- ActionScript Android -->
