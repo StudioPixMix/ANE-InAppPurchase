@@ -1,0 +1,5 @@
+h1. Air Native Extension for In-app purchases on iOS and Android (ARM and x86)
+
+- Android In-app Billing Version 3 API. 
+
+- Think of adding the in-app billing permission in your AndroidManifest.xml : <uses-permission android:name="com.android.vending.BILLING" />
