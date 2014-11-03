@@ -24,7 +24,7 @@ DEFINE_ANE_FUNCTION(test)
     return NULL;
 }
 
-void InAppPurchaseANEContextInitializer( void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctionsToSet, const FRENamedFunction** functionsToSet )
+void InAppPurchaseIosExtensionContextInitializer( void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctionsToSet, const FRENamedFunction** functionsToSet )
 {
     static FRENamedFunction mopubFunctionMap[] =
     {
@@ -35,21 +35,21 @@ void InAppPurchaseANEContextInitializer( void* extData, const uint8_t* ctxType, 
     *functionsToSet = mopubFunctionMap;
 }
 
-void InAppPurchaseANEContextFinalizer( FREContext ctx )
+void InAppPurchaseIosExtensionContextFinalizer( FREContext ctx )
 {
 	return;
 }
 
-void InAppPurchaseANEExtensionInitializer( void** extDataToSet, FREContextInitializer* ctxInitializerToSet, FREContextFinalizer* ctxFinalizerToSet )
+void InAppPurchaseIosExtensionInitializer( void** extDataToSet, FREContextInitializer* ctxInitializerToSet, FREContextFinalizer* ctxFinalizerToSet )
 {
     extDataToSet = NULL;
-    *ctxInitializerToSet = &InAppPurchaseANEContextInitializer;
-    *ctxFinalizerToSet = &InAppPurchaseANEContextFinalizer;
+    *ctxInitializerToSet = &InAppPurchaseIosExtensionContextInitializer;
+    *ctxFinalizerToSet = &InAppPurchaseIosExtensionContextFinalizer;
     
     typeConversionHelper = [[TypeConversionHelper alloc] init];
 }
 
-void MoPubExtensionFinalizer()
+void InAppPurchaseIosExtensionFinalizer()
 {
     return;
 }

@@ -8,13 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		019251231A026F2A00F6267E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019251221A026F2A00F6267E /* Foundation.framework */; };
-		0192512A1A026F2B00F6267E /* InAppPurchaseANE.m in Sources */ = {isa = PBXBuildFile; fileRef = 019251291A026F2B00F6267E /* InAppPurchaseANE.m */; };
+		0192512A1A026F2B00F6267E /* InAppPurchaseIosExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 019251291A026F2B00F6267E /* InAppPurchaseIosExtension.m */; };
 		019251311A026F2B00F6267E /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019251301A026F2B00F6267E /* XCTest.framework */; };
 		019251321A026F2B00F6267E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019251221A026F2A00F6267E /* Foundation.framework */; };
 		019251341A026F2B00F6267E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019251331A026F2B00F6267E /* UIKit.framework */; };
 		019251371A026F2B00F6267E /* libInAppPurchaseIosExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0192511F1A026F2A00F6267E /* libInAppPurchaseIosExtension.a */; };
-		0192513D1A026F2B00F6267E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0192513B1A026F2B00F6267E /* InfoPlist.strings */; };
-		0192513F1A026F2B00F6267E /* InAppPurchaseANETests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0192513E1A026F2B00F6267E /* InAppPurchaseANETests.m */; };
 		0192514B1A02777900F6267E /* TypeConversionHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0192514A1A02777900F6267E /* TypeConversionHelper.m */; };
 /* End PBXBuildFile section */
 
@@ -44,13 +42,10 @@
 		0192511F1A026F2A00F6267E /* libInAppPurchaseIosExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libInAppPurchaseIosExtension.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		019251221A026F2A00F6267E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		019251261A026F2B00F6267E /* InAppPurchaseIosExtension-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "InAppPurchaseIosExtension-Prefix.pch"; sourceTree = "<group>"; };
-		019251291A026F2B00F6267E /* InAppPurchaseANE.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InAppPurchaseANE.m; sourceTree = "<group>"; };
+		019251291A026F2B00F6267E /* InAppPurchaseIosExtension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InAppPurchaseIosExtension.m; sourceTree = "<group>"; };
 		0192512F1A026F2B00F6267E /* InAppPurchaseIosExtensionTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = InAppPurchaseIosExtensionTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		019251301A026F2B00F6267E /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		019251331A026F2B00F6267E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
-		0192513A1A026F2B00F6267E /* InAppPurchaseIosExtensionTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "InAppPurchaseIosExtensionTests-Info.plist"; sourceTree = "<group>"; };
-		0192513C1A026F2B00F6267E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		0192513E1A026F2B00F6267E /* InAppPurchaseANETests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InAppPurchaseANETests.m; sourceTree = "<group>"; };
 		019251481A026FD400F6267E /* FlashRuntimeExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlashRuntimeExtensions.h; sourceTree = "<group>"; };
 		019251491A02777900F6267E /* TypeConversionHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TypeConversionHelper.h; sourceTree = "<group>"; };
 		0192514A1A02777900F6267E /* TypeConversionHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TypeConversionHelper.m; sourceTree = "<group>"; };
@@ -82,8 +77,7 @@
 		019251161A026F2A00F6267E = {
 			isa = PBXGroup;
 			children = (
-				019251241A026F2A00F6267E /* InAppPurchaseANE */,
-				019251381A026F2B00F6267E /* InAppPurchaseANETests */,
+				019251241A026F2A00F6267E /* InAppPurchaseIosExtension */,
 				019251211A026F2A00F6267E /* Frameworks */,
 				019251201A026F2A00F6267E /* Products */,
 			);
@@ -108,15 +102,16 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		019251241A026F2A00F6267E /* InAppPurchaseANE */ = {
+		019251241A026F2A00F6267E /* InAppPurchaseIosExtension */ = {
 			isa = PBXGroup;
 			children = (
 				019251481A026FD400F6267E /* FlashRuntimeExtensions.h */,
-				019251291A026F2B00F6267E /* InAppPurchaseANE.m */,
+				019251291A026F2B00F6267E /* InAppPurchaseIosExtension.m */,
 				019251251A026F2B00F6267E /* Supporting Files */,
 				019251491A02777900F6267E /* TypeConversionHelper.h */,
 				0192514A1A02777900F6267E /* TypeConversionHelper.m */,
 			);
+			name = InAppPurchaseIosExtension;
 			path = InAppPurchaseANE;
 			sourceTree = "<group>";
 		};
@@ -124,24 +119,6 @@
 			isa = PBXGroup;
 			children = (
 				019251261A026F2B00F6267E /* InAppPurchaseIosExtension-Prefix.pch */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		019251381A026F2B00F6267E /* InAppPurchaseANETests */ = {
-			isa = PBXGroup;
-			children = (
-				0192513E1A026F2B00F6267E /* InAppPurchaseANETests.m */,
-				019251391A026F2B00F6267E /* Supporting Files */,
-			);
-			path = InAppPurchaseANETests;
-			sourceTree = "<group>";
-		};
-		019251391A026F2B00F6267E /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				0192513A1A026F2B00F6267E /* InAppPurchaseIosExtensionTests-Info.plist */,
-				0192513B1A026F2B00F6267E /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -216,7 +193,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0192513D1A026F2B00F6267E /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -227,7 +203,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0192512A1A026F2B00F6267E /* InAppPurchaseANE.m in Sources */,
+				0192512A1A026F2B00F6267E /* InAppPurchaseIosExtension.m in Sources */,
 				0192514B1A02777900F6267E /* TypeConversionHelper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -236,7 +212,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0192513F1A026F2B00F6267E /* InAppPurchaseANETests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -249,17 +224,6 @@
 			targetProxy = 019251351A026F2B00F6267E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		0192513B1A026F2B00F6267E /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				0192513C1A026F2B00F6267E /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		019251401A026F2B00F6267E /* Debug */ = {
@@ -417,6 +381,7 @@
 				019251441A026F2B00F6267E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		019251451A026F2B00F6267E /* Build configuration list for PBXNativeTarget "InAppPurchaseIosExtensionTests" */ = {
 			isa = XCConfigurationList;
@@ -425,6 +390,7 @@
 				019251471A026F2B00F6267E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

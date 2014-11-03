@@ -160,8 +160,6 @@
             <arg value="../build/extension.xml"/>
             <arg line="-swc actionscript/default/${name}.swc"/>
             <arg line="-platform iPhone-ARM -platformoptions ../build/platform.xml -C ios/ ."/>
-            <arg line="-platform Android-ARM -C android/ ."/>
-			<arg line="-platform Android-x86 -C android/ ."/>
             <arg line="-platform default -C default/ ."/>
         </exec>
 		<copy file="../bin/actionscript/default/${name}.swc" todir="../bin" overwrite="true"/>
