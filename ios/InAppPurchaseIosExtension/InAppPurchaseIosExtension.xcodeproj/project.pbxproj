@@ -22,7 +22,7 @@
 			containerPortal = 019251171A026F2A00F6267E /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 0192511E1A026F2A00F6267E;
-			remoteInfo = InAppPurchaseANE;
+			remoteInfo = InAppPurchaseIosExtension;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -112,7 +112,7 @@
 				0192514A1A02777900F6267E /* TypeConversionHelper.m */,
 			);
 			name = InAppPurchaseIosExtension;
-			path = InAppPurchaseANE;
+			path = InAppPurchaseIosExtension;
 			sourceTree = "<group>";
 		};
 		019251251A026F2B00F6267E /* Supporting Files */ = {
@@ -139,7 +139,7 @@
 			dependencies = (
 			);
 			name = InAppPurchaseIosExtension;
-			productName = InAppPurchaseANE;
+			productName = InAppPurchaseIosExtension;
 			productReference = 0192511F1A026F2A00F6267E /* libInAppPurchaseIosExtension.a */;
 			productType = "com.apple.product-type.library.static";
 		};
@@ -157,7 +157,7 @@
 				019251361A026F2B00F6267E /* PBXTargetDependency */,
 			);
 			name = InAppPurchaseIosExtensionTests;
-			productName = InAppPurchaseANETests;
+			productName = InAppPurchaseIosExtensionTests;
 			productReference = 0192512F1A026F2B00F6267E /* InAppPurchaseIosExtensionTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
@@ -297,9 +297,9 @@
 		019251431A026F2B00F6267E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DSTROOT = /tmp/InAppPurchaseANE.dst;
+				DSTROOT = /tmp/InAppPurchaseIosExtension.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "InAppPurchaseANE/InAppPurchaseIosExtension-Prefix.pch";
+				GCC_PREFIX_HEADER = "InAppPurchaseIosExtension/InAppPurchaseIosExtension-Prefix.pch";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				New_Setting = "";
 				ONLY_ACTIVE_ARCH = NO;
@@ -313,9 +313,9 @@
 		019251441A026F2B00F6267E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DSTROOT = /tmp/InAppPurchaseANE.dst;
+				DSTROOT = /tmp/InAppPurchaseIosExtension.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "InAppPurchaseANE/InAppPurchaseIosExtension-Prefix.pch";
+				GCC_PREFIX_HEADER = "InAppPurchaseIosExtension/InAppPurchaseIosExtension-Prefix.pch";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				New_Setting = "";
 				ONLY_ACTIVE_ARCH = NO;
@@ -335,12 +335,12 @@
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "InAppPurchaseANE/InAppPurchaseANE-Prefix.pch";
+				GCC_PREFIX_HEADER = "InAppPurchaseIosExtension/InAppPurchaseIosExtension-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "InAppPurchaseANETests/InAppPurchaseIosExtensionTests-Info.plist";
+				INFOPLIST_FILE = "InAppPurchaseIosExtensionTests/InAppPurchaseIosExtensionTests-Info.plist";
 				PRODUCT_NAME = InAppPurchaseIosExtensionTests;
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -355,8 +355,8 @@
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "InAppPurchaseANE/InAppPurchaseANE-Prefix.pch";
-				INFOPLIST_FILE = "InAppPurchaseANETests/InAppPurchaseIosExtensionTests-Info.plist";
+				GCC_PREFIX_HEADER = "InAppPurchaseIosExtension/InAppPurchaseIosExtension-Prefix.pch";
+				INFOPLIST_FILE = "InAppPurchaseIosExtensionTests/InAppPurchaseIosExtensionTests-Info.plist";
 				PRODUCT_NAME = InAppPurchaseIosExtensionTests;
 				WRAPPER_EXTENSION = xctest;
 			};
