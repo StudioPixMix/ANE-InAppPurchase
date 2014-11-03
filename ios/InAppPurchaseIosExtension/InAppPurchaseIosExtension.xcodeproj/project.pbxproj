@@ -41,7 +41,6 @@
 /* Begin PBXFileReference section */
 		0192511F1A026F2A00F6267E /* libInAppPurchaseIosExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libInAppPurchaseIosExtension.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		019251221A026F2A00F6267E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		019251261A026F2B00F6267E /* InAppPurchaseIosExtension-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "InAppPurchaseIosExtension-Prefix.pch"; sourceTree = "<group>"; };
 		019251291A026F2B00F6267E /* InAppPurchaseIosExtension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InAppPurchaseIosExtension.m; sourceTree = "<group>"; };
 		0192512F1A026F2B00F6267E /* InAppPurchaseIosExtensionTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = InAppPurchaseIosExtensionTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		019251301A026F2B00F6267E /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -107,20 +106,10 @@
 			children = (
 				019251481A026FD400F6267E /* FlashRuntimeExtensions.h */,
 				019251291A026F2B00F6267E /* InAppPurchaseIosExtension.m */,
-				019251251A026F2B00F6267E /* Supporting Files */,
 				019251491A02777900F6267E /* TypeConversionHelper.h */,
 				0192514A1A02777900F6267E /* TypeConversionHelper.m */,
 			);
-			name = InAppPurchaseIosExtension;
 			path = InAppPurchaseIosExtension;
-			sourceTree = "<group>";
-		};
-		019251251A026F2B00F6267E /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				019251261A026F2B00F6267E /* InAppPurchaseIosExtension-Prefix.pch */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -298,8 +287,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DSTROOT = /tmp/InAppPurchaseIosExtension.dst;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "InAppPurchaseIosExtension/InAppPurchaseIosExtension-Prefix.pch";
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				New_Setting = "";
 				ONLY_ACTIVE_ARCH = NO;
@@ -314,8 +303,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DSTROOT = /tmp/InAppPurchaseIosExtension.dst;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "InAppPurchaseIosExtension/InAppPurchaseIosExtension-Prefix.pch";
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				New_Setting = "";
 				ONLY_ACTIVE_ARCH = NO;
