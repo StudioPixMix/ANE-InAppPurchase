@@ -1,5 +1,5 @@
 <extension xmlns="http://ns.adobe.com/air/extension/3.5">
-	<id>com.studiopixmix.anes.InAppPurchase</id>
+	<id>com.studiopixmix.anes.inapppurchase</id>
 	<versionNumber>0.0.1</versionNumber>
 	<platforms>
 		<platform name="iPhone-ARM">

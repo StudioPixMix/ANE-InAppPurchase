@@ -8,7 +8,7 @@ package com.studiopixmix.anes.InAppPurchase
 	public class InAppPurchaseEvent extends Event {
 		public static const LOG:String = "LOG";
 		
-		private var data:String;
+		public var data:String;
 		
 		public function InAppPurchaseEvent(type:String, data:String = null, bubbles:Boolean=false, cancelable:Boolean=false) {
 			this.data = data;

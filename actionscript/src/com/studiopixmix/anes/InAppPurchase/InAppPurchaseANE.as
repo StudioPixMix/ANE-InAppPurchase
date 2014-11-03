@@ -5,7 +5,7 @@ package com.studiopixmix.anes.InAppPurchase
 	import flash.external.ExtensionContext;
 	
 	public class InAppPurchaseANE extends EventDispatcher {
-		private static const EXTENSION_ID:String = "com.studiopixmix.anes.InAppPurchase";
+		private static const EXTENSION_ID:String = "com.studiopixmix.anes.inapppurchase";
 		
 		private var extContext:ExtensionContext;
 	
@@ -36,10 +36,8 @@ package com.studiopixmix.anes.InAppPurchase
 		 * and execute the right function.
 		 */
 		private function onStatusEvent(event:StatusEvent):void {
-			if(event.level == InAppPurchaseEvent.LOG) {
-				trace("Logged.");
-				trace(event.code);
-			}
+			if (event.code == InAppPurchaseEvent.LOG)
+				dispatchANEEvent(InAppPurchaseEvent.LOG, event.level);
 		}
 		
 	}
