@@ -16,6 +16,10 @@ package com.studiopixmix.anes.InAppPurchase
 		
 		// PROPERTIES
 		private var extContext:ExtensionContext;
+		/** The logging function you want to use. Defaults to trace. */
+		public static var logger:Function = trace;
+		/** The prefix appended to every log message. Defaults to "[Inneractive]". */
+		public static var logPrefix:String = "[InAppPurchaseANE]";
 	
 		// CONSTRUCTOR
 		
@@ -24,6 +28,7 @@ package com.studiopixmix.anes.InAppPurchase
 		 */
 		public function InAppPurchaseANE() {
 			extContext = ExtensionContext.createExtensionContext(EXTENSION_ID, "");
+			log("Context created : " + extContext);
 			
 			extContext.addEventListener(StatusEvent.STATUS, onStatusEvent);
 			
@@ -38,7 +43,7 @@ package com.studiopixmix.anes.InAppPurchase
 		 */
 		private function onStatusEvent(event:StatusEvent):void {
 			if (event.code == InAppPurchaseEvent.LOG)
-				dispatchANEEvent(InAppPurchaseEvent.LOG, event.level);
+				log(event.level);
 		}
 		
 		/**
@@ -52,6 +57,7 @@ package com.studiopixmix.anes.InAppPurchase
 		 * Test method to see if the ANE is working. Calls the "test" native method.
 		 */
 		public function test():void {
+			log("Testing the ane ...");
 			dispatchANEEvent(InAppPurchaseEvent.LOG, extContext.call(NATIVE_METHOD_TEST) as String);
 		}
 		
@@ -60,6 +66,24 @@ package com.studiopixmix.anes.InAppPurchase
 		 */
 		public function getProducts(productsIds:Vector.<String>):void {
 			extContext.call(NATIVE_METHOD_GET_PRODUCTS, productsIds);
+		}
+		
+		
+		
+		/////////////
+		// LOGGING //
+		/////////////
+		
+		/**
+		 * Outputs the given message(s) using the provided logger function, or using trace.
+		 */
+		private static function log(message:String, ... additionnalMessages):void {
+			if(logger == null) return;
+			
+			if(!additionnalMessages)
+				additionnalMessages = [];
+			
+			logger((logPrefix && logPrefix.length > 0 ? logPrefix + " " : "") + message + " " + additionnalMessages.join(" "));
 		}
 	}
 }

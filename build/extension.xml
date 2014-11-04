@@ -9,6 +9,23 @@
 				<finalizer>InAppPurchaseIosExtensionFinalizer</finalizer>
 			</applicationDeployment>
 		</platform>
+		
+		<platform name="Android-ARM">
+			<applicationDeployment>
+				<nativeLibrary>ANE-InAppPurchase.jar</nativeLibrary>
+				<initializer>com.studiopixmix.anes.inapppurchase.InAppPurchaseExtension</initializer>
+				<finalizer>com.studiopixmix.anes.inapppurchase.InAppPurchaseExtension</finalizer>
+			</applicationDeployment>
+		</platform>
+		
+		<platform name="Android-x86">
+			<applicationDeployment>
+				<nativeLibrary>ANE-InAppPurchase.jar</nativeLibrary>
+				<initializer>com.studiopixmix.anes.inapppurchase.InAppPurchaseExtension</initializer>
+				<finalizer>com.studiopixmix.anes.inapppurchase.InAppPurchaseExtension</finalizer>
+			</applicationDeployment>
+		</platform>
+		
 		<platform name="default">
 			<applicationDeployment/>
 		</platform>
