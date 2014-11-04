@@ -20,4 +20,6 @@
 - (FREResult) FREGetDouble:(double)value asObject:(FREObject*)asObject;
 - (FREResult) FREGetBool:(BOOL)value asObject:(FREObject*)asObject;
 
+- (NSArray *) FREGetObjectAsStringArray:(FREObject)object;
+
 @end

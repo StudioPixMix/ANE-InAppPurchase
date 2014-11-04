@@ -1,5 +1,8 @@
 package com.studiopixmix.anes.InAppPurchase
 {
+	import com.studiopixmix.anes.InAppPurchase.event.InAppPurchaseEvent;
+	import com.studiopixmix.anes.InAppPurchase.event.ProductsLoadedEvent;
+	
 	import flash.events.EventDispatcher;
 	import flash.events.StatusEvent;
 	import flash.external.ExtensionContext;
@@ -15,6 +18,11 @@ package com.studiopixmix.anes.InAppPurchase
 		private static const NATIVE_METHOD_GET_PRODUCTS:String = "getProducts";
 		
 		// PROPERTIES
+		/** The logging function you want to use. Defaults to trace. */
+		public static var loggingFunc:Function = trace;
+		/** The prefix appended to every log message. Defaults to "[InAppPurchase]". */
+		public static var logPrefix:String = "[InAppPurchase]";
+		
 		private var extContext:ExtensionContext;
 	
 		// CONSTRUCTOR
@@ -28,58 +36,41 @@ package com.studiopixmix.anes.InAppPurchase
 			extContext.addEventListener(StatusEvent.STATUS, onStatusEvent);
 			
 			if (!extContext)
-				dispatchANEEvent(InAppPurchaseEvent.LOG, "Could not create extension context.");
+				log("Could not create extension context.");
 		}
 		
 		// METHODS
+		/**
+		 * Logs the given message if we have a logger registered.
+		 */
+		private function log(message:String, ... additionalMessages):void {
+			if (loggingFunc == null)
+				return;
+			
+			if(!additionalMessages)
+				additionalMessages = [];
+			
+			loggingFunc((logPrefix && logPrefix.length > 0 ? logPrefix + " " : "") + message + " " + additionalMessages.join(" "));
+
+		}
+		
 		/**
 		 * Called on each Status Event from the native code. Switches on the event level to determine the event type
 		 * and executes the right function.
 		 */
 		private function onStatusEvent(event:StatusEvent):void {
 			if (event.code == InAppPurchaseEvent.LOG)
-				dispatchANEEvent(InAppPurchaseEvent.LOG, event.level);
+				log(event.level);
 			else if (event.code == InAppPurchaseEvent.PRODUCTS_LOADED) {
-				try {
-					const productsArray:Array = JSON.parse(event.level) as Array;
-					const numProductsInArray:int = productsArray.length;
-					
-					const productsVector:Vector.<InAppPurchaseProduct> = new Vector.<InAppPurchaseProduct>();
-					
-					for (var i:int = 0; i < numProductsInArray; i++)
-						productsVector.push(createInAppPurchaseProductFromJSON(productsArray[0]));
-				} catch (e:Error) {
-					dispatchANEEvent(InAppPurchaseEvent.LOG, "");
-					
-				}
-					
-				dispatchANEEvent(InAppPurchaseEvent.PRODUCTS_LOADED, productsVector);
+				dispatchEvent(ProductsLoadedEvent.FromStatusEvent(event));
 			}
-		}
-		
-		private function createInAppPurchaseProductFromJSON(jsonProduct:Object):InAppPurchaseProduct {
-			const product:InAppPurchaseProduct = new InAppPurchaseProduct();
-			
-			product.id = jsonProduct.id;
-			product.title = jsonProduct.title;
-			product.description = jsonProduct.description;
-			product.price = jsonProduct.price;
-			
-			return product;
-		}
-		
-		/**
-		 * Helper to dispatch an InAppPurchaseEvent.
-		 */
-		private function dispatchANEEvent(eventType:String, data:Object):void {
-			dispatchEvent(new InAppPurchaseEvent(eventType, data));
 		}
 		
 		/**
 		 * Test method to see if the ANE is working. Calls the "test" native method.
 		 */
 		public function test():void {
-			dispatchANEEvent(InAppPurchaseEvent.LOG, extContext.call(NATIVE_METHOD_TEST) as String);
+			log(extContext.call(NATIVE_METHOD_TEST) as String);
 		}
 		
 		/**

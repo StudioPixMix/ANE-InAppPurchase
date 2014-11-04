@@ -30,6 +30,7 @@
     if( result != FRE_OK ) return result;
     
     *value = [NSString stringWithUTF8String: (char*) tempValue];
+    
     return FRE_OK;
 }
 
@@ -40,7 +41,7 @@
         return FRE_INVALID_ARGUMENT;
     }
     const char* utf8String = string.UTF8String;
-    unsigned long length = strlen( utf8String );
+    uint32_t length = (uint32_t)strlen( utf8String );
     return FRENewObjectFromUTF8( length + 1, (uint8_t*) utf8String, asObject );
 }
 
@@ -57,6 +58,27 @@
 - (FREResult) FREGetBool:(BOOL)value asObject:(FREObject*)asObject
 {
     return FRENewObjectFromBool( value, asObject );
+}
+
+- (NSArray *) FREGetObjectAsStringArray:(FREObject)object {
+    uint32_t arrayLength;
+    FREGetArrayLength(object, &arrayLength);
+    
+    NSMutableArray *mutableArray = [NSMutableArray arrayWithCapacity:arrayLength];
+    
+    for (uint32_t i = 0; i < arrayLength; i++) {
+        FREObject itemRaw;
+        FREGetArrayElementAt(object, i, &itemRaw);
+        
+        NSString *item;
+        
+        if ([self FREGetObject:itemRaw asString:&item] != FRE_OK)
+            continue;
+        
+        [mutableArray addObject:item];
+    }
+    
+    return [NSArray arrayWithArray:mutableArray];
 }
 
 @end

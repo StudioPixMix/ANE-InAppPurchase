@@ -30,5 +30,23 @@ package com.studiopixmix.anes.InAppPurchase
 		// CONSTRUCTOR
 		public function InAppPurchaseProduct() {
 		}
+		
+		/**
+		 * Builds an InAppPurchaseProduct from the given JSON object.
+		 */
+		public static function FromJSONProduct(jsonProduct:Object):InAppPurchaseProduct {
+			const product:InAppPurchaseProduct = new InAppPurchaseProduct();
+			
+			product.id = jsonProduct.id;
+			product.title = jsonProduct.title;
+			product.description = jsonProduct.description;
+			product.price = jsonProduct.price;
+			
+			return product;
+		}
+		
+		public function toString():String {
+			return "<InAppPurchaseProduct[id:" + id + ", title:" + title + ", price:" + price + "]>";
+		}
 	}
 }

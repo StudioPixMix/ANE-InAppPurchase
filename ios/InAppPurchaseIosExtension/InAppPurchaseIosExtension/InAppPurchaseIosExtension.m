@@ -7,19 +7,39 @@
 //
 #import "FlashRuntimeExtensions.h"
 #import "TypeConversionHelper.h"
+#import "ExtensionDefs.h"
+#import <StoreKit/StoreKit.h>
+#import "ProductsRequestDelegate.h"
 
 #define DEFINE_ANE_FUNCTION(fn) FREObject (fn)(FREContext context, void* functionData, uint32_t argc, FREObject argv[])
 
 #define MAP_FUNCTION(fn, data) { (const uint8_t*)(#fn), (data), &(fn) }
 
-TypeConversionHelper* typeConversionHelper;
 
-DEFINE_ANE_FUNCTION(test)
-{
+TypeConversionHelper* typeConversionHelper;
+ProductsRequestDelegate *productsRequestDelegate;
+
+DEFINE_ANE_FUNCTION(test) {
     FREObject test;
     
-    if ([typeConversionHelper FREGetString:@"Hello world !" asObject:&test] == FRE_OK)
+    if ([typeConversionHelper FREGetString:@"It works !" asObject:&test] == FRE_OK)
         return test;
+    
+    return NULL;
+}
+
+DEFINE_ANE_FUNCTION(getProducts) {
+    NSArray *productIdsRequested = [typeConversionHelper FREGetObjectAsStringArray:argv[0]];
+    
+    NSString *logMessage = [NSString stringWithFormat:@"Starting an SKProductsRequest with products %@", [productIdsRequested componentsJoinedByString:@", "]];
+    DISPATCH_LOG_EVENT(context, logMessage);
+    
+    SKProductsRequest *productsRequest = [[SKProductsRequest alloc] initWithProductIdentifiers:[NSSet setWithArray:productIdsRequested]];
+    
+    productsRequestDelegate.context = context;
+    productsRequest.delegate = productsRequestDelegate;
+    
+    [productsRequest start];
     
     return NULL;
 }
@@ -28,7 +48,8 @@ void InAppPurchaseIosExtensionContextInitializer( void* extData, const uint8_t* 
 {
     static FRENamedFunction mopubFunctionMap[] =
     {
-        MAP_FUNCTION(test, NULL )
+        MAP_FUNCTION(test, NULL ),
+        MAP_FUNCTION(getProducts, NULL)
     };
         
     *numFunctionsToSet = sizeof( mopubFunctionMap ) / sizeof( FRENamedFunction );
@@ -47,6 +68,7 @@ void InAppPurchaseIosExtensionInitializer( void** extDataToSet, FREContextInitia
     *ctxFinalizerToSet = &InAppPurchaseIosExtensionContextFinalizer;
     
     typeConversionHelper = [[TypeConversionHelper alloc] init];
+    productsRequestDelegate = [[ProductsRequestDelegate alloc] init];
 }
 
 void InAppPurchaseIosExtensionFinalizer()
