@@ -20,10 +20,6 @@ package com.studiopixmix.anes.InAppPurchase
         public static var logger:Function = trace;
         /** The prefix appended to every log message. Defaults to "[Inneractive]". */
         public static var logPrefix:String = "[InAppPurchaseANE]";
-		
-		// INITIALIZATION
-		/** Whether the initialization is complete or not. If false, every in-app request will be ignored. */
-		private var isInitialized:Boolean;
 
 	
 		// CONSTRUCTOR
@@ -32,7 +28,6 @@ package com.studiopixmix.anes.InAppPurchase
 		 * Creates the extension context if possible.
 		 */
 		public function InAppPurchaseANE() {
-			isInitialized = false;
 			
 			extContext = ExtensionContext.createExtensionContext(EXTENSION_ID, "");
 			log("Context created : " + extContext);
@@ -62,8 +57,6 @@ package com.studiopixmix.anes.InAppPurchase
 		 */
 		private function onStatusEvent(event:StatusEvent):void {
 			
-			// TODO: queue the in-app requests as long as the isInitialized flag is false.
-			
 			if (event.code == InAppPurchaseEvent.LOG)
 				log(event.level);
 			else if (event.code == InAppPurchaseEvent.PRODUCTS_LOADED) {
@@ -81,9 +74,6 @@ package com.studiopixmix.anes.InAppPurchase
 				}
 					
 				dispatchANEEvent(InAppPurchaseEvent.PRODUCTS_LOADED, productsVector);
-			}
-			else if (event.code == InAppPurchaseEvent.INITIALIZED) {
-				isInitialized = true;
 			}
 		}
 		
