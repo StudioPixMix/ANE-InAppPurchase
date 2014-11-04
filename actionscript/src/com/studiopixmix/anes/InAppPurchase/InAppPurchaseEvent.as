@@ -8,6 +8,8 @@ package com.studiopixmix.anes.InAppPurchase
 	public class InAppPurchaseEvent extends Event {
 		/** data : log message. */
 		public static const LOG:String = "EVENT_LOG";
+		/** Dispatched at the end of the initialization method in the native code. */
+		public static const INITIALIZED:String = "EVENT_INITIALIZED";
 		/** data : products:Vector.<InAppPurchaseProduct> */
 		public static const PRODUCTS_LOADED:String = "EVENT_PRODUCTS_LOADED";
 		

@@ -4,5 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="D:/SDK/Android/adt-bundle-windows-x86-20140624/sdk/platforms/android-20/android.jar"/>
 	<classpathentry kind="lib" path="C:/Program Files (x86)/Adobe/Adobe Flash Builder 4.6/sdks/4.6.0_AIR_15.0.0.249/lib/android/FlashRuntimeExtensions.jar"/>
+	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
