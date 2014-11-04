@@ -39,12 +39,39 @@ package com.studiopixmix.anes.InAppPurchase
 		private function onStatusEvent(event:StatusEvent):void {
 			if (event.code == InAppPurchaseEvent.LOG)
 				dispatchANEEvent(InAppPurchaseEvent.LOG, event.level);
+			else if (event.code == InAppPurchaseEvent.PRODUCTS_LOADED) {
+				try {
+					const productsArray:Array = JSON.parse(event.level) as Array;
+					const numProductsInArray:int = productsArray.length;
+					
+					const productsVector:Vector.<InAppPurchaseProduct> = new Vector.<InAppPurchaseProduct>();
+					
+					for (var i:int = 0; i < numProductsInArray; i++)
+						productsVector.push(createInAppPurchaseProductFromJSON(productsArray[0]));
+				} catch (e:Error) {
+					dispatchANEEvent(InAppPurchaseEvent.LOG, "");
+					
+				}
+					
+				dispatchANEEvent(InAppPurchaseEvent.PRODUCTS_LOADED, productsVector);
+			}
+		}
+		
+		private function createInAppPurchaseProductFromJSON(jsonProduct:Object):InAppPurchaseProduct {
+			const product:InAppPurchaseProduct = new InAppPurchaseProduct();
+			
+			product.id = jsonProduct.id;
+			product.title = jsonProduct.title;
+			product.description = jsonProduct.description;
+			product.price = jsonProduct.price;
+			
+			return product;
 		}
 		
 		/**
 		 * Helper to dispatch an InAppPurchaseEvent.
 		 */
-		private function dispatchANEEvent(eventType:String, data:String = ""):void {
+		private function dispatchANEEvent(eventType:String, data:Object):void {
 			dispatchEvent(new InAppPurchaseEvent(eventType, data));
 		}
 		
