@@ -71,7 +71,7 @@ package com.studiopixmix.anes.InAppPurchase
 		 * Calls the <code>initialize</code> method in the native code. This method MUST be called before doing any in-app purchase.
 		 */
 		public function initialize():void {
-			extContext.call(NATIVE_METHOD_INITIALIZE));
+			extContext.call(NATIVE_METHOD_INITIALIZE);
 		}
 		
 		/**
