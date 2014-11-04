@@ -17,9 +17,10 @@ package com.studiopixmix.anes.InAppPurchase
 		// PROPERTIES
 		private var extContext:ExtensionContext;
 		/** The logging function you want to use. Defaults to trace. */
-		public static var logger:Function = trace;
-		/** The prefix appended to every log message. Defaults to "[Inneractive]". */
-		public static var logPrefix:String = "[InAppPurchaseANE]";
+        public static var logger:Function = trace;
+        /** The prefix appended to every log message. Defaults to "[Inneractive]". */
+        public static var logPrefix:String = "[InAppPurchaseANE]";
+
 	
 		// CONSTRUCTOR
 		
@@ -44,12 +45,39 @@ package com.studiopixmix.anes.InAppPurchase
 		private function onStatusEvent(event:StatusEvent):void {
 			if (event.code == InAppPurchaseEvent.LOG)
 				log(event.level);
+			else if (event.code == InAppPurchaseEvent.PRODUCTS_LOADED) {
+				try {
+					const productsArray:Array = JSON.parse(event.level) as Array;
+					const numProductsInArray:int = productsArray.length;
+					
+					const productsVector:Vector.<InAppPurchaseProduct> = new Vector.<InAppPurchaseProduct>();
+					
+					for (var i:int = 0; i < numProductsInArray; i++)
+						productsVector.push(createInAppPurchaseProductFromJSON(productsArray[0]));
+				} catch (e:Error) {
+					dispatchANEEvent(InAppPurchaseEvent.LOG, "");
+					
+				}
+					
+				dispatchANEEvent(InAppPurchaseEvent.PRODUCTS_LOADED, productsVector);
+			}
+		}
+		
+		private function createInAppPurchaseProductFromJSON(jsonProduct:Object):InAppPurchaseProduct {
+			const product:InAppPurchaseProduct = new InAppPurchaseProduct();
+			
+			product.id = jsonProduct.id;
+			product.title = jsonProduct.title;
+			product.description = jsonProduct.description;
+			product.price = jsonProduct.price;
+			
+			return product;
 		}
 		
 		/**
 		 * Helper to dispatch an InAppPurchaseEvent.
 		 */
-		private function dispatchANEEvent(eventType:String, data:String = ""):void {
+		private function dispatchANEEvent(eventType:String, data:Object):void {
 			dispatchEvent(new InAppPurchaseEvent(eventType, data));
 		}
 		
@@ -57,7 +85,7 @@ package com.studiopixmix.anes.InAppPurchase
 		 * Test method to see if the ANE is working. Calls the "test" native method.
 		 */
 		public function test():void {
-			log("Testing the ane ...");
+		    log("Testing the ane ...");
 			dispatchANEEvent(InAppPurchaseEvent.LOG, extContext.call(NATIVE_METHOD_TEST) as String);
 		}
 		
@@ -69,21 +97,21 @@ package com.studiopixmix.anes.InAppPurchase
 		}
 		
 		
-		
 		/////////////
-		// LOGGING //
-		/////////////
-		
-		/**
-		 * Outputs the given message(s) using the provided logger function, or using trace.
-		 */
-		private static function log(message:String, ... additionnalMessages):void {
-			if(logger == null) return;
-			
-			if(!additionnalMessages)
-				additionnalMessages = [];
-			
-			logger((logPrefix && logPrefix.length > 0 ? logPrefix + " " : "") + message + " " + additionnalMessages.join(" "));
-		}
+        // LOGGING //
+        /////////////
+        
+        /**
+         * Outputs the given message(s) using the provided logger function, or using trace.
+         */
+        private static function log(message:String, ... additionnalMessages):void {
+            if(logger == null) return;
+            
+            if(!additionnalMessages)
+                additionnalMessages = [];
+            
+            logger((logPrefix && logPrefix.length > 0 ? logPrefix + " " : "") + message + " " + additionnalMessages.join(" "));
+        }
+
 	}
 }
