@@ -16,6 +16,7 @@ package com.studiopixmix.anes.InAppPurchase
 		
 		private static const NATIVE_METHOD_TEST:String = "test";
 		private static const NATIVE_METHOD_GET_PRODUCTS:String = "getProducts";
+		private static const NATIVE_METHOD_INITIALIZE:String = "initialize";
 		
 		// PROPERTIES
 		/** The logging function you want to use. Defaults to trace. */
@@ -64,6 +65,13 @@ package com.studiopixmix.anes.InAppPurchase
 			else if (event.code == InAppPurchaseEvent.PRODUCTS_LOADED) {
 				dispatchEvent(ProductsLoadedEvent.FromStatusEvent(event));
 			}
+		}
+		
+		/**
+		 * Calls the <code>initialize</code> method in the native code. This method MUST be called before doing any in-app purchase.
+		 */
+		public function initialize():void {
+			extContext.call(NATIVE_METHOD_INITIALIZE));
 		}
 		
 		/**

@@ -14,7 +14,7 @@ public class TestFunction implements FREFunction {
 	@Override
 	public FREObject call(FREContext arg0, FREObject[] arg1) {
 		
-		InAppPurchaseExtension.logToAS("Hello world!");
+		InAppPurchaseExtension.logToAS("Hello world from the ANE!");
 		
 		return null;
 	}

@@ -160,6 +160,8 @@
             <arg value="../build/extension.xml"/>
             <arg line="-swc actionscript/default/${name}.swc"/>
             <arg line="-platform iPhone-ARM -platformoptions ../build/platform.xml -C ios/ ."/>
+			<arg line="-platform Android-ARM -C android/ ."/>
+			<arg line="-platform Android-x86 -C android/ ."/>
             <arg line="-platform default -C default/ ."/>
         </exec>
 		<copy file="../bin/actionscript/default/${name}.swc" todir="../bin" overwrite="true"/>
@@ -170,29 +172,6 @@
 	<target name="export" description="Export the compiled ANE">
 		<echo message="Exporting the compiled ANE to ${export.dir} ..."/>
 		<copy file="../bin/${name}.ane" todir="${export.dir}" overwrite="true"/>
-		<echo message="Done."/>
-	</target>
-	
-	<!-- Extract AppsFire resources from JAR -->
-	<target name="appsfire" description="Prepares AppsFire SDK : extract AppsFire resources and strip conflicting resource : GCM">
-		<echo message="Extracting resources and stripping GCM from AppsFire SDK ..." />
-		<unzip src="../android/libs/afAdSdk.jar" dest="../android/libs/temp" />
-		
-		<!-- Extract resources -->
-		<delete dir="../android/resources"/>
-		<move todir="../android/resources">
-			<fileset file="../android/libs/temp/com/appsfire/adUnitJAR/resources/*" />
-		</move>
-		<delete dir="../android/libs/temp/com/appsfire/adUnitJAR/resources" />
-		
-		<!-- Strip GCM. Comment this if GCM is not conflicting with your other ANEs -->
-		<delete dir="../android/libs/temp/com/google/android/" />
-		
-		<!-- Repackage the SDK -->
-		<jar basedir="../android/libs/temp" destfile="../android/libs/appsfire.jar" />
-		<delete dir="../android/libs/temp" />
-		<delete file="../android/libs/afAdSdk.jar" />
-		
 		<echo message="Done."/>
 	</target>
 </project>
