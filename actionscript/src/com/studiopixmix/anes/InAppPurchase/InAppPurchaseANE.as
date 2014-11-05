@@ -14,9 +14,9 @@ package com.studiopixmix.anes.InAppPurchase
 		// CONSTANTS
 		private static const EXTENSION_ID:String = "com.studiopixmix.anes.inapppurchase";
 		
-		private static const NATIVE_METHOD_TEST:String = "test";
 		private static const NATIVE_METHOD_GET_PRODUCTS:String = "getProducts";
 		private static const NATIVE_METHOD_INITIALIZE:String = "initialize";
+		private static const NATIVE_METHOD_BUY_PRODUCT:String = "buyProduct";
 		
 		// PROPERTIES
 		/** The logging function you want to use. Defaults to trace. */
@@ -62,9 +62,12 @@ package com.studiopixmix.anes.InAppPurchase
 		private function onStatusEvent(event:StatusEvent):void {
 			if (event.code == InAppPurchaseEvent.LOG)
 				log(event.level);
-			else if (event.code == InAppPurchaseEvent.PRODUCTS_LOADED) {
+			else if (event.code == InAppPurchaseEvent.PRODUCTS_LOADED)
 				dispatchEvent(ProductsLoadedEvent.FromStatusEvent(event));
-			}
+			else if (event.code == InAppPurchaseEvent.PURCHASE_SUCCESS)
+				log("Purchase success !");
+			else if (event.code == InAppPurchaseEvent.PURCHASE_FAILURE)
+				log("Purchase failure !");
 		}
 		
 		/**
@@ -75,17 +78,17 @@ package com.studiopixmix.anes.InAppPurchase
 		}
 		
 		/**
-		 * Test method to see if the ANE is working. Calls the "test" native method.
-		 */
-		public function test():void {
-			log(extContext.call(NATIVE_METHOD_TEST) as String);
-		}
-		
-		/**
 		 * Request the given products informations.
 		 */
 		public function getProducts(productsIds:Vector.<String>):void {
 			extContext.call(NATIVE_METHOD_GET_PRODUCTS, productsIds);
+		}
+		
+		/**
+		 * Buys the given product.
+		 */
+		public function buyProduct(productId:String):void {
+			extContext.call(NATIVE_METHOD_BUY_PRODUCT, productId);
 		}
 	}
 }
