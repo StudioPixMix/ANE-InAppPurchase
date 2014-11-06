@@ -47,12 +47,16 @@ DEFINE_ANE_FUNCTION(getProducts) {
 
 DEFINE_ANE_FUNCTION(buyProduct) {
     NSString *productId;
-    if ([typeConversionHelper FREGetObject:argv[0] asString:&productId] != FRE_OK)
+    if ([typeConversionHelper FREGetObject:argv[0] asString:&productId] != FRE_OK) {
+        DISPATCH_ANE_EVENT(context, EVENT_PURCHASE_FAILURE, (uint8_t*)"No productId provided");
         return NULL;
+    }
     
     NSString *applicationUsername;
-    if ([typeConversionHelper FREGetObject:argv[1] asString:&applicationUsername] != FRE_OK)
+    if ([typeConversionHelper FREGetObject:argv[1] asString:&applicationUsername] != FRE_OK) {
+        DISPATCH_ANE_EVENT(context, EVENT_PURCHASE_FAILURE, (uint8_t*)"No applicationUsername provided");
         return NULL;
+    }
     
     NSString *logMessage = [NSString stringWithFormat:@"Buying product %@", productId];
     DISPATCH_LOG_EVENT(context, logMessage);
@@ -60,7 +64,7 @@ DEFINE_ANE_FUNCTION(buyProduct) {
     SKProduct *product = [productsRequestDelegate getProductWithId:productId];
     
     if (product == nil) {
-        DISPATCH_LOG_EVENT(context, @"Product was not loaded with getProducts, cannot buy it.");
+        DISPATCH_ANE_EVENT(context, EVENT_PURCHASE_FAILURE, (uint8_t*)"Product was not loaded with getProducts, cannot buy it");
         return NULL;
     }
     

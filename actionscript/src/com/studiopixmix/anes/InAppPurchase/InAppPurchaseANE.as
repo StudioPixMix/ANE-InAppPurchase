@@ -3,6 +3,7 @@ package com.studiopixmix.anes.InAppPurchase
 	import com.studiopixmix.anes.InAppPurchase.event.InAppPurchaseEvent;
 	import com.studiopixmix.anes.InAppPurchase.event.ProductsInvalidEvent;
 	import com.studiopixmix.anes.InAppPurchase.event.ProductsLoadedEvent;
+	import com.studiopixmix.anes.InAppPurchase.event.PurchaseFailureEvent;
 	import com.studiopixmix.anes.InAppPurchase.event.PurchaseSuccessEvent;
 	
 	import flash.events.EventDispatcher;
@@ -70,8 +71,9 @@ package com.studiopixmix.anes.InAppPurchase
 				dispatchEvent(ProductsInvalidEvent.FromStatusEvent(event));
 			else if (event.code == InAppPurchaseEvent.PURCHASE_SUCCESS)
 				dispatchEvent(PurchaseSuccessEvent.FromStatusEvent(event));
-			else if (event.code == InAppPurchaseEvent.PURCHASE_FAILURE)
-				log("Purchase failure !");
+			else if (event.code == InAppPurchaseEvent.PURCHASE_FAILURE) {
+				dispatchEvent(PurchaseFailureEvent.FromStatusEvent(event));
+			}
 		}
 		
 		/**
