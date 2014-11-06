@@ -3,6 +3,7 @@ package com.studiopixmix.anes.InAppPurchase
 	import com.studiopixmix.anes.InAppPurchase.event.InAppPurchaseEvent;
 	import com.studiopixmix.anes.InAppPurchase.event.ProductsInvalidEvent;
 	import com.studiopixmix.anes.InAppPurchase.event.ProductsLoadedEvent;
+	import com.studiopixmix.anes.InAppPurchase.event.PurchaseSuccessEvent;
 	
 	import flash.events.EventDispatcher;
 	import flash.events.StatusEvent;
@@ -68,7 +69,7 @@ package com.studiopixmix.anes.InAppPurchase
 			else if (event.code == InAppPurchaseEvent.PRODUCTS_INVALID)
 				dispatchEvent(ProductsInvalidEvent.FromStatusEvent(event));
 			else if (event.code == InAppPurchaseEvent.PURCHASE_SUCCESS)
-				log("Purchase success !");
+				dispatchEvent(PurchaseSuccessEvent.FromStatusEvent(event));
 			else if (event.code == InAppPurchaseEvent.PURCHASE_FAILURE)
 				log("Purchase failure !");
 		}
@@ -85,7 +86,7 @@ package com.studiopixmix.anes.InAppPurchase
 		 */
 		public function getProducts(productsIds:Vector.<String>):void {
 			if (productsIds.length == 0) {
-				dispatchEvent(new ProductsInvalidEvent());
+				dispatchEvent(new ProductsInvalidEvent(productsIds));
 				return;
 			}
 			

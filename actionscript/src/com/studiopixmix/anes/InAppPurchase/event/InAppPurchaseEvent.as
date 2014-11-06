@@ -13,8 +13,8 @@ package com.studiopixmix.anes.InAppPurchase.event
 		public static const PURCHASE_SUCCESS:String = "EVENT_PURCHASE_SUCCESS";
 		public static const PURCHASE_FAILURE:String = "EVENT_PURCHASE_FAILURE";
 		
-		public function InAppPurchaseEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false) {
-			super(type, bubbles, cancelable);
+		public function InAppPurchaseEvent(type:String) {
+			super(type);
 		}
 	}
 }

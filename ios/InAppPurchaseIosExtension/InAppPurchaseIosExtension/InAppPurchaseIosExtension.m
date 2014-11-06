@@ -50,6 +50,10 @@ DEFINE_ANE_FUNCTION(buyProduct) {
     if ([typeConversionHelper FREGetObject:argv[0] asString:&productId] != FRE_OK)
         return NULL;
     
+    NSString *applicationUsername;
+    if ([typeConversionHelper FREGetObject:argv[1] asString:&applicationUsername] != FRE_OK)
+        return NULL;
+    
     NSString *logMessage = [NSString stringWithFormat:@"Buying product %@", productId];
     DISPATCH_LOG_EVENT(context, logMessage);
   
@@ -62,9 +66,7 @@ DEFINE_ANE_FUNCTION(buyProduct) {
     
     SKMutablePayment *payment = [SKMutablePayment paymentWithProduct:product];
     payment.quantity = 1;
-    
-    // TODO : set applicationUsername !
-    // payment.applicationUsername = nil;
+    payment.applicationUsername = applicationUsername;
     
     DISPATCH_LOG_EVENT(context, @"Adding SKPayment to the SKPaymentQueue...");
     [[SKPaymentQueue defaultQueue] addPayment:payment];
