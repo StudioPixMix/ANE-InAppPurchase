@@ -7,7 +7,6 @@ import com.adobe.fre.FREContext;
 import com.adobe.fre.FREFunction;
 import com.adobe.fre.FREObject;
 import com.studiopixmix.anes.inapppurchase.InAppPurchaseExtensionContext;
-import com.studiopixmix.anes.inapppurchase.InAppPurchaseMessages;
 
 /**
  * A method used to initialize the ANE, binds the activity to the In-app billing service
@@ -22,7 +21,6 @@ public class InAppPurchaseInitFunction implements FREFunction {
 		Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
 		serviceIntent.setPackage("com.android.vending");
 		context.getActivity().bindService(serviceIntent, ((InAppPurchaseExtensionContext) context).getServiceConnection(), Context.BIND_AUTO_CREATE);
-		context.dispatchStatusEventAsync(InAppPurchaseMessages.INITIALIZED, "true");
 		
 		return null;
 	}

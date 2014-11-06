@@ -69,6 +69,8 @@ public class InAppPurchaseExtension implements FREExtension {
 	 * exists. If it does not exist, does nothing.
 	 */
 	public static void logToAS(String message) {
+		log(message);
+		
 		if(iapContext != null)
 			iapContext.dispatchStatusEventAsync(InAppPurchaseMessages.LOG, "[" + TAG + "] : " + message);
 	}
