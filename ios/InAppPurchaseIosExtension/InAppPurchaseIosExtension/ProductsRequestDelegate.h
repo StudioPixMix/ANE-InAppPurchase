@@ -14,6 +14,7 @@
 
 @property (nonatomic, assign) FREContext context;
 @property (nonatomic, strong) NSArray *products;
+@property (nonatomic, strong) SKProductsResponse *currentResponse;
 
 - (SKProduct *) getProductWithId:(NSString *)productId;
 

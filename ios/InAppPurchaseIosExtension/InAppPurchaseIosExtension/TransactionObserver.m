@@ -20,6 +20,7 @@
     for (SKPaymentTransaction *transaction in transactions) {
         switch (transaction.transactionState) {
             case SKPaymentTransactionStateFailed:
+                [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
                 DISPATCH_ANE_EVENT(self.context, EVENT_PURCHASE_FAILURE, (uint8_t*)"");
                 break;
             

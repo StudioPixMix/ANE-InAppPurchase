@@ -84,14 +84,20 @@ package com.studiopixmix.anes.InAppPurchase
 		 * Request the given products informations.
 		 */
 		public function getProducts(productsIds:Vector.<String>):void {
+			if (productsIds.length == 0) {
+				dispatchEvent(new ProductsInvalidEvent());
+				return;
+			}
+			
 			extContext.call(NATIVE_METHOD_GET_PRODUCTS, productsIds);
 		}
 		
 		/**
 		 * Buys the given product.
+		 * @param devPayload Android-only. Optional.
 		 */
-		public function buyProduct(productId:String):void {
-			extContext.call(NATIVE_METHOD_BUY_PRODUCT, productId);
+		public function buyProduct(productId:String, devPayload:String):void {
+			extContext.call(NATIVE_METHOD_BUY_PRODUCT, productId, devPayload);
 		}
 	}
 }
