@@ -7,7 +7,6 @@ import com.adobe.fre.FREContext;
 import com.adobe.fre.FREFunction;
 import com.adobe.fre.FREObject;
 import com.studiopixmix.anes.inapppurchase.InAppPurchaseExtensionContext;
-import com.studiopixmix.anes.inapppurchase.InAppPurchaseMessages;
 
 /**
  * A method used to initialize the ANE, binds the activity to the In-app billing service
