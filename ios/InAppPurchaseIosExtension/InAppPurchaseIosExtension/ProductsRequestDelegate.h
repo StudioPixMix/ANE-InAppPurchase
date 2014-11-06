@@ -13,7 +13,8 @@
 @interface ProductsRequestDelegate : NSObject<SKProductsRequestDelegate>
 
 @property (nonatomic, assign) FREContext context;
+@property (nonatomic, strong) NSArray *products;
 
-- (id) initWithContext:(FREContext)context;
+- (SKProduct *) getProductWithId:(NSString *)productId;
 
 @end

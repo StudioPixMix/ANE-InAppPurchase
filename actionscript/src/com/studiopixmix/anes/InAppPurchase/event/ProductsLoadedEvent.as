@@ -9,7 +9,6 @@ package com.studiopixmix.anes.InAppPurchase.event
 	 */
 	public class ProductsLoadedEvent extends InAppPurchaseEvent {
 		// PROPERTIES
-		
 		public var products:Vector.<InAppPurchaseProduct>;
 
 		// CONSTRUCTOR
@@ -26,11 +25,14 @@ package com.studiopixmix.anes.InAppPurchase.event
 		public static function FromStatusEvent(statusEvent:StatusEvent):ProductsLoadedEvent {
 			const newEvent:ProductsLoadedEvent = new ProductsLoadedEvent();
 			
-			const productsArray:Array = JSON.parse(statusEvent.level) as Array;
-			const numProductsInArray:int = productsArray.length;
-			
-			for (var i:int = 0; i < numProductsInArray; i++)
-				newEvent.products.push(InAppPurchaseProduct.FromJSONProduct(productsArray[0]));
+			try {
+				const productsArray:Array = JSON.parse(statusEvent.level) as Array;
+				const numProductsInArray:int = productsArray.length;
+				
+				for (var i:int = 0; i < numProductsInArray; i++)
+					newEvent.products.push(InAppPurchaseProduct.FromJSONProduct(productsArray[0]));
+			} catch(e:Error) {
+			}
 			
 			return newEvent;
 		}

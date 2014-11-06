@@ -16,15 +16,6 @@
 
 @implementation ProductsRequestDelegate
 
-- (id) initWithContext:(FREContext)context {
-    self = [super init];
-    
-    if (self)
-        self.context = context;
-    
-    return self;
-}
-
 - (void) productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response {
     DISPATCH_LOG_EVENT(self.context, @"Products request did receive response.");
     
@@ -32,6 +23,10 @@
         NSString *logMessage = [[NSString alloc] initWithFormat:@"Invalid product : %@", productId];
         DISPATCH_LOG_EVENT(self.context, logMessage);
     }
+    
+    self.products = response.products;
+    
+    DISPATCH_LOG_EVENT(self.context, @"Building JSON of the loaded products.");
     
     NSMutableArray *productsArray = [[NSMutableArray alloc] init];
     
@@ -49,6 +44,20 @@
 
     NSString *productsReturned = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     
+    DISPATCH_LOG_EVENT(self.context, @"Dispatching JSON built.");
+    
     DISPATCH_ANE_EVENT(self.context, EVENT_PRODUCTS_LOADED, (uint8_t*)productsReturned.UTF8String);
+}
+
+- (SKProduct *) getProductWithId:(NSString *)productId {
+    if (self.products == nil)
+        return nil;
+  
+    for (SKProduct *product in self.products) {
+        if ([product.productIdentifier isEqualToString:productId])
+            return product;
+    }
+    
+    return nil;
 }
 @end

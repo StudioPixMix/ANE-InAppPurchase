@@ -14,6 +14,7 @@
 		019251371A026F2B00F6267E /* libInAppPurchaseIosExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0192511F1A026F2A00F6267E /* libInAppPurchaseIosExtension.a */; };
 		0192514B1A02777900F6267E /* TypeConversionHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0192514A1A02777900F6267E /* TypeConversionHelper.m */; };
 		01BD9E051A08C89600097447 /* ProductsRequestDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BD9E041A08C89600097447 /* ProductsRequestDelegate.m */; };
+		01FFBAE11A0A33E400B0DAF6 /* TransactionObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 01FFBAE01A0A33E400B0DAF6 /* TransactionObserver.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +51,8 @@
 		01BD9E031A08C89600097447 /* ProductsRequestDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductsRequestDelegate.h; sourceTree = "<group>"; };
 		01BD9E041A08C89600097447 /* ProductsRequestDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductsRequestDelegate.m; sourceTree = "<group>"; };
 		01FFBADE1A08D0B000B0DAF6 /* ExtensionDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExtensionDefs.h; sourceTree = "<group>"; };
+		01FFBADF1A0A33E400B0DAF6 /* TransactionObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransactionObserver.h; sourceTree = "<group>"; };
+		01FFBAE01A0A33E400B0DAF6 /* TransactionObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransactionObserver.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +114,8 @@
 				01BD9E031A08C89600097447 /* ProductsRequestDelegate.h */,
 				01BD9E041A08C89600097447 /* ProductsRequestDelegate.m */,
 				01FFBADE1A08D0B000B0DAF6 /* ExtensionDefs.h */,
+				01FFBADF1A0A33E400B0DAF6 /* TransactionObserver.h */,
+				01FFBAE01A0A33E400B0DAF6 /* TransactionObserver.m */,
 			);
 			path = InAppPurchaseIosExtension;
 			sourceTree = "<group>";
@@ -197,6 +202,7 @@
 			files = (
 				0192512A1A026F2B00F6267E /* InAppPurchaseIosExtension.m in Sources */,
 				0192514B1A02777900F6267E /* TypeConversionHelper.m in Sources */,
+				01FFBAE11A0A33E400B0DAF6 /* TransactionObserver.m in Sources */,
 				01BD9E051A08C89600097447 /* ProductsRequestDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
