@@ -5,13 +5,13 @@ package com.studiopixmix.anes.InAppPurchase.event
 	/**
 	 * Event dispatched when one or many products are declared invalid by the native store.
 	 */
-	public class ProductsInvalidEvent extends InAppPurchaseEvent {
+	public class ProductsInvalidEvent extends InAppPurchaseANEEvent {
 		// PROPERTIES
 		public var invalidProductsIds:Vector.<String>;
 		
 		// CONSTRUCTOR
 		public function ProductsInvalidEvent(invalidProductsIds:Vector.<String>) {
-			super(InAppPurchaseEvent.PRODUCTS_INVALID);
+			super(InAppPurchaseANEEvent.PRODUCTS_INVALID);
 			
 			this.invalidProductsIds = invalidProductsIds;
 		}

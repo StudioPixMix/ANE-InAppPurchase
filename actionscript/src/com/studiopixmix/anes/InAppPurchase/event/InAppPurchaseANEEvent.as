@@ -5,7 +5,7 @@ package com.studiopixmix.anes.InAppPurchase.event
 	/**
 	 * An event dispatched by the in-app purchase ANE.
 	 */
-	public class InAppPurchaseEvent extends Event {
+	public class InAppPurchaseANEEvent extends Event {
 		// EVENT TYPE CONSTANTS
 		public static const LOG:String = "EVENT_LOG";
 		public static const PRODUCTS_LOADED:String = "EVENT_PRODUCTS_LOADED";
@@ -13,7 +13,7 @@ package com.studiopixmix.anes.InAppPurchase.event
 		public static const PURCHASE_SUCCESS:String = "EVENT_PURCHASE_SUCCESS";
 		public static const PURCHASE_FAILURE:String = "EVENT_PURCHASE_FAILURE";
 		
-		public function InAppPurchaseEvent(type:String) {
+		public function InAppPurchaseANEEvent(type:String) {
 			super(type);
 		}
 	}
