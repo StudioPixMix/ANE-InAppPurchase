@@ -51,14 +51,22 @@ public class InAppPurchaseInitFunction implements FREFunction {
 			@Override
 			protected Void doInBackground(Void... params) {
 				try {
+					
+					InAppPurchaseExtension.logToAS("Before getpurchases");
+					InAppPurchaseExtension.logToAS("API version : " + InAppPurchaseExtension.API_VERSION);
+					InAppPurchaseExtension.logToAS("packageName : " + packageName);
+					InAppPurchaseExtension.logToAS("iapService : " + iapService);
 					Bundle previousPurchases = iapService.getPurchases(InAppPurchaseExtension.API_VERSION, packageName, "inapp", null);
+					InAppPurchaseExtension.logToAS("After getPurchases");
 					
 					ArrayList<String> itemsJson = previousPurchases.getStringArrayList("INAPP_PURCHASE_DATA_LIST");
+					ArrayList<String> dataSignatures = previousPurchases.getStringArrayList("INAPP_DATA_SIGNATURE_LIST");
+					
 					int i, n = itemsJson.size();
 					
 					if(n > 0) {
 						for(i = 0 ; i < n ; i++) {
-							InAppPurchaseBuyProductFunction.consumeProduct(new JSONObject(itemsJson.get(i)), c);
+							InAppPurchaseBuyProductFunction.consumeProduct(new JSONObject(itemsJson.get(i)), c, dataSignatures.get(i));
 						}
 						
 						InAppPurchaseExtension.logToAS(n + " previous item(s) has been consumed.");
