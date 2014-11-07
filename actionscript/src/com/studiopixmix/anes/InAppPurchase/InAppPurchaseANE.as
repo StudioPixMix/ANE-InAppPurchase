@@ -1,6 +1,7 @@
 package com.studiopixmix.anes.InAppPurchase
 {
-	import com.studiopixmix.anes.InAppPurchase.event.InAppPurchaseEvent;
+	import com.studiopixmix.anes.InAppPurchase.event.InAppPurchaseANEEvent;
+	import com.studiopixmix.anes.InAppPurchase.event.LogEvent;
 	import com.studiopixmix.anes.InAppPurchase.event.ProductsInvalidEvent;
 	import com.studiopixmix.anes.InAppPurchase.event.ProductsLoadedEvent;
 	import com.studiopixmix.anes.InAppPurchase.event.PurchaseFailureEvent;
@@ -22,11 +23,6 @@ package com.studiopixmix.anes.InAppPurchase
 		private static const NATIVE_METHOD_BUY_PRODUCT:String = "buyProduct";
 		
 		// PROPERTIES
-		/** The logging function you want to use. Defaults to trace. */
-		public static var loggingFunc:Function = trace;
-		/** The prefix appended to every log message. Defaults to "[InAppPurchase]". */
-		public static var logPrefix:String = "[InAppPurchase]";
-		
 		private var extContext:ExtensionContext;
 	
 		// CONSTRUCTOR
@@ -40,40 +36,29 @@ package com.studiopixmix.anes.InAppPurchase
 			extContext.addEventListener(StatusEvent.STATUS, onStatusEvent);
 			
 			if (!extContext)
-				log("Could not create extension context.");
+				dispatchEvent(new LogEvent("Could not create extension context."));
 		}
 		
 		// METHODS
-		/**
-		 * Logs the given message if we have a logger registered.
-		 */
-		private function log(message:String, ... additionalMessages):void {
-			if (loggingFunc == null)
-				return;
-			
-			if(!additionalMessages)
-				additionalMessages = [];
-			
-			loggingFunc((logPrefix && logPrefix.length > 0 ? logPrefix + " " : "") + message + " " + additionalMessages.join(" "));
-
-		}
-		
 		/**
 		 * Called on each Status Event from the native code. Switches on the event level to determine the event type
 		 * and executes the right function.
 		 */
 		private function onStatusEvent(event:StatusEvent):void {
-			if (event.code == InAppPurchaseEvent.LOG)
-				log(event.level);
-			else if (event.code == InAppPurchaseEvent.PRODUCTS_LOADED)
-				dispatchEvent(ProductsLoadedEvent.FromStatusEvent(event));
-			else if (event.code == InAppPurchaseEvent.PRODUCTS_INVALID)
-				dispatchEvent(ProductsInvalidEvent.FromStatusEvent(event));
-			else if (event.code == InAppPurchaseEvent.PURCHASE_SUCCESS)
-				dispatchEvent(PurchaseSuccessEvent.FromStatusEvent(event));
-			else if (event.code == InAppPurchaseEvent.PURCHASE_FAILURE) {
-				dispatchEvent(PurchaseFailureEvent.FromStatusEvent(event));
-			}
+			var eventToDispatch:InAppPurchaseANEEvent;
+			
+			if (event.code == InAppPurchaseANEEvent.LOG)
+				eventToDispatch = LogEvent.FromStatusEvent(event);
+			else if (event.code == InAppPurchaseANEEvent.PRODUCTS_LOADED)
+				eventToDispatch = ProductsLoadedEvent.FromStatusEvent(event);
+			else if (event.code == InAppPurchaseANEEvent.PRODUCTS_INVALID)
+				eventToDispatch = ProductsInvalidEvent.FromStatusEvent(event);
+			else if (event.code == InAppPurchaseANEEvent.PURCHASE_SUCCESS)
+				eventToDispatch = PurchaseSuccessEvent.FromStatusEvent(event);
+			else if (event.code == InAppPurchaseANEEvent.PURCHASE_FAILURE)
+				eventToDispatch = PurchaseFailureEvent.FromStatusEvent(event);
+			
+			dispatchEvent(eventToDispatch);
 		}
 		
 		/**

@@ -7,13 +7,13 @@ package com.studiopixmix.anes.InAppPurchase.event
 	/**
 	 * Event dispatched when products are loaded from the native store.
 	 */
-	public class ProductsLoadedEvent extends InAppPurchaseEvent {
+	public class ProductsLoadedEvent extends InAppPurchaseANEEvent {
 		// PROPERTIES
 		public var products:Vector.<InAppPurchaseProduct>;
 
 		// CONSTRUCTOR
 		public function ProductsLoadedEvent(products:Vector.<InAppPurchaseProduct>) {
-			super(InAppPurchaseEvent.PRODUCTS_LOADED);
+			super(InAppPurchaseANEEvent.PRODUCTS_LOADED);
 			
 			this.products = products;
 		}

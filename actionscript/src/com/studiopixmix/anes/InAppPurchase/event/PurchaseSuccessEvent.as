@@ -7,13 +7,13 @@ package com.studiopixmix.anes.InAppPurchase.event
 	/**
 	 * Event dispatched when a purchase is successful.
 	 */
-	public class PurchaseSuccessEvent extends InAppPurchaseEvent {
+	public class PurchaseSuccessEvent extends InAppPurchaseANEEvent {
 		// PROPERTIES
 		public var purchase:SuccessfullPurchase;
 		
 		// CONSTRUCTOR
 		public function PurchaseSuccessEvent(purchase:SuccessfullPurchase) {
-			super(InAppPurchaseEvent.PURCHASE_SUCCESS);
+			super(InAppPurchaseANEEvent.PURCHASE_SUCCESS);
 			
 			this.purchase = purchase;
 		}

@@ -5,13 +5,13 @@ package com.studiopixmix.anes.InAppPurchase.event
 	/**
 	 * Dispatched when a purchase fails.
 	 */
-	public class PurchaseFailureEvent extends InAppPurchaseEvent {
+	public class PurchaseFailureEvent extends InAppPurchaseANEEvent {
 		// PROPERTIES
 		public var message:String;
 		
 		// CONSTRUCTOR
 		public function PurchaseFailureEvent(message:String) {
-			super(InAppPurchaseEvent.PURCHASE_FAILURE);
+			super(InAppPurchaseANEEvent.PURCHASE_FAILURE);
 			
 			this.message = message;
 		}
