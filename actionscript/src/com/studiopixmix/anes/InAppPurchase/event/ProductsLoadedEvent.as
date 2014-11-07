@@ -12,10 +12,10 @@ package com.studiopixmix.anes.InAppPurchase.event
 		public var products:Vector.<InAppPurchaseProduct>;
 
 		// CONSTRUCTOR
-		public function ProductsLoadedEvent() {
+		public function ProductsLoadedEvent(products:Vector.<InAppPurchaseProduct>) {
 			super(InAppPurchaseEvent.PRODUCTS_LOADED);
 			
-			this.products = new Vector.<InAppPurchaseProduct>();
+			this.products = products;
 		}
 		
 		/**
@@ -23,18 +23,19 @@ package com.studiopixmix.anes.InAppPurchase.event
 		 * The products are returned as a JSON string in the "level" property of the status event.
 		 */
 		public static function FromStatusEvent(statusEvent:StatusEvent):ProductsLoadedEvent {
-			const newEvent:ProductsLoadedEvent = new ProductsLoadedEvent();
-			
 			try {
 				const productsArray:Array = JSON.parse(statusEvent.level) as Array;
 				const numProductsInArray:int = productsArray.length;
+				const products:Vector.<InAppPurchaseProduct> = new Vector.<InAppPurchaseProduct>();
 				
 				for (var i:int = 0; i < numProductsInArray; i++)
-					newEvent.products.push(InAppPurchaseProduct.FromJSONProduct(productsArray[0]));
+					products.push(InAppPurchaseProduct.FromJSONProduct(productsArray[0]));
+				
+				return new ProductsLoadedEvent(products);
 			} catch(e:Error) {
 			}
 			
-			return newEvent;
+			return new ProductsLoadedEvent(new <InAppPurchaseProduct>[]);
 		}
 	}
 }

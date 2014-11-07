@@ -1,7 +1,5 @@
 package com.studiopixmix.anes.InAppPurchase.event
 {
-	import com.studiopixmix.anes.InAppPurchase.InAppPurchaseProduct;
-	
 	import flash.events.StatusEvent;
 
 	/**
@@ -12,10 +10,10 @@ package com.studiopixmix.anes.InAppPurchase.event
 		public var invalidProductsIds:Vector.<String>;
 		
 		// CONSTRUCTOR
-		public function ProductsInvalidEvent() {
+		public function ProductsInvalidEvent(invalidProductsIds:Vector.<String>) {
 			super(InAppPurchaseEvent.PRODUCTS_INVALID);
 			
-			this.invalidProductsIds = new Vector.<String>();
+			this.invalidProductsIds = invalidProductsIds;
 		}
 		
 		/**
@@ -23,15 +21,15 @@ package com.studiopixmix.anes.InAppPurchase.event
 		 * The invalid products ids are stored as a list of ids separated by "," in the "level" property of the event.
 		 */
 		public static function FromStatusEvent(statusEvent:StatusEvent):ProductsInvalidEvent {
-			const newEvent:ProductsInvalidEvent = new ProductsInvalidEvent();
-			
 			try {
 				const productIdsAsString:String = statusEvent.level as String;
-				newEvent.invalidProductsIds = Vector.<String>(productIdsAsString.split(","));
+				const invalidProductsIds:Vector.<String> = Vector.<String>(productIdsAsString.split(","));
+				
+				return new ProductsInvalidEvent(invalidProductsIds);
 			} catch (e:Error) {
 			}
 			
-			return newEvent;
+			return new ProductsInvalidEvent(new <String>[]);
 		}
 	}
 }

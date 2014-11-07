@@ -9,25 +9,21 @@ package com.studiopixmix.anes.InAppPurchase
 		
 		/**
 		 * iOS equivalent : productIdentifier
-		 * Android equivalent : productId
 		 */
 		public var id:String;
 		
 		/**
 		 * iOS equivalent : localizedTitle
-		 * Android equivalent : title
 		 */
 		public var title:String;
 		
 		/**
 		 * iOS equivalent : localizedDescription
-		 * Android equivalent : description
 		 */
 		public var description:String;
 		
 		/**
 		 * iOS equivalent : price
-		 * Android equivalent : price_amount_micros / 1000000
 		 */
 		public var price:Number;
 		

@@ -3,6 +3,8 @@ package com.studiopixmix.anes.InAppPurchase
 	import com.studiopixmix.anes.InAppPurchase.event.InAppPurchaseEvent;
 	import com.studiopixmix.anes.InAppPurchase.event.ProductsInvalidEvent;
 	import com.studiopixmix.anes.InAppPurchase.event.ProductsLoadedEvent;
+	import com.studiopixmix.anes.InAppPurchase.event.PurchaseFailureEvent;
+	import com.studiopixmix.anes.InAppPurchase.event.PurchaseSuccessEvent;
 	
 	import flash.events.EventDispatcher;
 	import flash.events.StatusEvent;
@@ -68,9 +70,10 @@ package com.studiopixmix.anes.InAppPurchase
 			else if (event.code == InAppPurchaseEvent.PRODUCTS_INVALID)
 				dispatchEvent(ProductsInvalidEvent.FromStatusEvent(event));
 			else if (event.code == InAppPurchaseEvent.PURCHASE_SUCCESS)
-				log("Purchase success !");
-			else if (event.code == InAppPurchaseEvent.PURCHASE_FAILURE)
-				log("Purchase failure !");
+				dispatchEvent(PurchaseSuccessEvent.FromStatusEvent(event));
+			else if (event.code == InAppPurchaseEvent.PURCHASE_FAILURE) {
+				dispatchEvent(PurchaseFailureEvent.FromStatusEvent(event));
+			}
 		}
 		
 		/**
@@ -84,14 +87,20 @@ package com.studiopixmix.anes.InAppPurchase
 		 * Request the given products informations.
 		 */
 		public function getProducts(productsIds:Vector.<String>):void {
+			if (productsIds.length == 0) {
+				dispatchEvent(new ProductsInvalidEvent(productsIds));
+				return;
+			}
+			
 			extContext.call(NATIVE_METHOD_GET_PRODUCTS, productsIds);
 		}
 		
 		/**
 		 * Buys the given product.
+		 * @param devPayload Android-only. Optional.
 		 */
-		public function buyProduct(productId:String):void {
-			extContext.call(NATIVE_METHOD_BUY_PRODUCT, productId);
+		public function buyProduct(productId:String, devPayload:String):void {
+			extContext.call(NATIVE_METHOD_BUY_PRODUCT, productId, devPayload);
 		}
 	}
 }
