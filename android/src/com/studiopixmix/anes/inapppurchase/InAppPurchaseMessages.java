@@ -11,4 +11,8 @@ public class InAppPurchaseMessages {
 	public static final String LOG = "EVENT_LOG";
 	/** Event dispatched when the products have been loaded. */
 	public static final String PRODUCTS_LOADED = "EVENT_PRODUCTS_LOADED";
+	/** Event dispatched when the buy intent has failed. */
+	public static final String PURCHASE_FAILURE = "EVENT_PURCHASE_FAILURE";
+	/** Event dispatched when the buy intent has succeeded and the product has been consumed. */
+	public static final String PURCHASE_SUCCESS = "EVENT_PURCHASE_SUCCESS";
 }

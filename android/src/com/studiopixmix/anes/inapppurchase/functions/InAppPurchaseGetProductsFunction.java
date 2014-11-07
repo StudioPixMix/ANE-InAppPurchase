@@ -16,10 +16,17 @@ import com.adobe.fre.FREArray;
 import com.adobe.fre.FREContext;
 import com.adobe.fre.FREFunction;
 import com.adobe.fre.FREObject;
+import com.android.vending.billing.IInAppBillingService;
 import com.studiopixmix.anes.inapppurchase.InAppPurchaseExtension;
 import com.studiopixmix.anes.inapppurchase.InAppPurchaseExtensionContext;
 import com.studiopixmix.anes.inapppurchase.InAppPurchaseMessages;
 
+/**
+ * A function used to retrieve the product info for the given product IDs (formated in a String Vector). This method
+ * dispatches an event <code>InAppPurchaseMessages.PRODUCTS_LOADED</code> if at least one product info has been loaded, with
+ * its data, and can dispatch a <code>InAppPurchaseMessages.PRODUCTS_INVALID</code> if one of the given product IDs has not
+ * been found on the in-app billing service, with the related ID(s) in its data.
+ */
 public class InAppPurchaseGetProductsFunction implements FREFunction {
 	
 	// CONSTANTS :
@@ -33,7 +40,7 @@ public class InAppPurchaseGetProductsFunction implements FREFunction {
 	/** 
 	 * The error codes messages, in String, as described in the Google documentation. 
 	 * 
-	 * @see <a href="http://developer.android.com/google/play/billing/billing_reference.html#response-codes">Google response codes documentation</a>
+	 * @see <a href="http://developer.android.com/google/play/billing/billing_reference.html#billing-codes">Google response codes documentation</a>
 	 */
 	private static final ArrayList<String> ERRORS_MESSAGES = new ArrayList<String>(Arrays.asList(
 				"Success.",
@@ -54,6 +61,7 @@ public class InAppPurchaseGetProductsFunction implements FREFunction {
 		final InAppPurchaseExtensionContext context = (InAppPurchaseExtensionContext) c;
 		final Activity activity = context.getActivity();
 		final ArrayList<String> productsIds = FREArrayToArrayList((FREArray) args[0]);
+		final IInAppBillingService iapService = context.getInAppBillingService();
 		
 		// The getSkuDetails method is synchronous, so it has to be executed in an asynchronous task to avoid blocking the main thread.
 		(new AsyncTask<Void, Void, Void>() {
@@ -67,7 +75,7 @@ public class InAppPurchaseGetProductsFunction implements FREFunction {
 				// Retrieves the products details.
 				Bundle skuDetails = null;
 				try {
-					skuDetails = context.getInAppBillingService().getSkuDetails(3, activity.getPackageName(), "inapp", products);
+					skuDetails = iapService.getSkuDetails(InAppPurchaseExtension.API_VERSION, activity.getPackageName(), "inapp", products);
 				}
 				catch(RemoteException e) {
 					InAppPurchaseExtension.logToAS("Error while retrieving the products details : " + e.toString());

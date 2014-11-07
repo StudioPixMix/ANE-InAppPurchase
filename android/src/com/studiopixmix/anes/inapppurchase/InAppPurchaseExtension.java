@@ -10,6 +10,11 @@ import com.adobe.fre.FREExtension;
  */
 public class InAppPurchaseExtension implements FREExtension {
 	
+	// CONSTANTS :
+	/** The in-app billing API version. */
+	public static final int API_VERSION = 3;
+	
+	
 	// PROPERTIES :
 	/** The logging TAG. */
 	public static String TAG = "InAppPurchaseExtension";
@@ -73,5 +78,25 @@ public class InAppPurchaseExtension implements FREExtension {
 		
 		if(iapContext != null)
 			iapContext.dispatchStatusEventAsync(InAppPurchaseMessages.LOG, "[" + TAG + "] : " + message);
+	}
+	
+	
+	
+	///////////
+	// Utils //
+	///////////
+	
+	/**
+	 * Returns a complete formated String stack trace for the given Exception.
+	 */
+	public static String getStackString(Exception e) {
+		String stackTrace = e.toString() + "\n";
+		StackTraceElement[] stackArray = e.getStackTrace();
+		int i, n = stackArray.length;
+		for(i = 0 ; i < n ; i++) {
+			stackTrace += ("	" + stackArray[i].toString() + "\n");
+		}
+		
+		return stackTrace;
 	}
 }
