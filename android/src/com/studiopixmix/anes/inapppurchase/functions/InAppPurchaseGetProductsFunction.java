@@ -102,6 +102,7 @@ public class InAppPurchaseGetProductsFunction implements FREFunction {
 					
 					// Number formatter used to format the localized price returned by Google to a normal double.
 					NumberFormat format = NumberFormat.getInstance();
+					format.setMinimumFractionDigits(2);
 					Number number;
 					
 					for(i = 0 ; i < length ; i++) {
@@ -115,6 +116,9 @@ public class InAppPurchaseGetProductsFunction implements FREFunction {
 							number = format.parse(currentJsonObject.get("price_amount_micros").toString());
 							currentObject.put("price", format.parse(String.format("%.2f", number.doubleValue() / 1000000.0)).doubleValue());
 							details.add(currentObject);
+							
+							// removes the current product ID from the ids received as parameters.
+							productsIds.remove(currentObject.get("id"));
 						}
 						catch (Exception e) {
 							InAppPurchaseExtension.logToAS("Error while parsing the products JSON! " + e.toString());
@@ -122,8 +126,18 @@ public class InAppPurchaseGetProductsFunction implements FREFunction {
 						}
 					}
 					
-					JSONArray toto = new JSONArray(details);
-					finalJSON = toto.toString();
+					JSONArray data = new JSONArray(details);
+					finalJSON = data.toString();
+					
+					
+					// Check if there is IDs left in productIds. If this is the case, there were invalid products in the parameters.
+					if(productsIds.size() > 0) {
+						JSONArray invalidProductsJson = new JSONArray();
+						for(i = 0, length = productsIds.size() ; i < length ; i++)
+							invalidProductsJson.put(productsIds.get(i));
+						
+						context.dispatchStatusEventAsync(InAppPurchaseMessages.PRODUCTS_INVALID, invalidProductsJson.toString());
+					}
 				}
 				else {
 					InAppPurchaseExtension.logToAS("Error while loading the products : " + ERRORS_MESSAGES.get(responseCode));
