@@ -14,6 +14,7 @@ import android.os.RemoteException;
 
 import com.adobe.fre.FREArray;
 import com.adobe.fre.FREContext;
+import com.adobe.fre.FREExtension;
 import com.adobe.fre.FREFunction;
 import com.adobe.fre.FREObject;
 import com.android.vending.billing.IInAppBillingService;
@@ -92,6 +93,10 @@ public class InAppPurchaseGetProductsFunction implements FREFunction {
 					
 					if(detailsJson == null || detailsJson.size() == 0) {
 						InAppPurchaseExtension.logToAS("No products details retrieved!");
+						
+						if(productsIds.size() > 0)
+							dispatchInvalidProducts(productsIds, context);
+						
 						return null;
 					}
 						
@@ -132,11 +137,7 @@ public class InAppPurchaseGetProductsFunction implements FREFunction {
 					
 					// Check if there is IDs left in productIds. If this is the case, there were invalid products in the parameters.
 					if(productsIds.size() > 0) {
-						JSONArray invalidProductsJson = new JSONArray();
-						for(i = 0, length = productsIds.size() ; i < length ; i++)
-							invalidProductsJson.put(productsIds.get(i));
-						
-						context.dispatchStatusEventAsync(InAppPurchaseMessages.PRODUCTS_INVALID, invalidProductsJson.toString());
+						dispatchInvalidProducts(productsIds, context);
 					}
 				}
 				else {
@@ -176,6 +177,20 @@ public class InAppPurchaseGetProductsFunction implements FREFunction {
 		}
 		
 		return list;
+	}
+	
+	
+	
+	/**
+	 * Dispatches a <code>PRODUCTS_INVALID</code> with the given collection of string as related propduct IDs.
+	 */
+	private void dispatchInvalidProducts(ArrayList<String> productIds, FREContext context) {
+		JSONArray invalidProductsJson = new JSONArray();
+		int i, length = productIds.size();
+		for(i = 0, length = productIds.size() ; i < length ; i++)
+			invalidProductsJson.put(productIds.get(i));
+		
+		context.dispatchStatusEventAsync(InAppPurchaseMessages.PRODUCTS_INVALID, invalidProductsJson.toString());
 	}
 
 }
