@@ -10,10 +10,8 @@ package com.studiopixmix.anes.InAppPurchase
 	import flash.events.EventDispatcher;
 	import flash.events.StatusEvent;
 	import flash.external.ExtensionContext;
+	import flash.system.Capabilities;
 	
-	/**
-	 * 
-	 */
 	public class InAppPurchaseANE extends EventDispatcher {
 		// CONSTANTS
 		private static const EXTENSION_ID:String = "com.studiopixmix.anes.inapppurchase";
@@ -24,7 +22,7 @@ package com.studiopixmix.anes.InAppPurchase
 		
 		// PROPERTIES
 		private var extContext:ExtensionContext;
-	
+		
 		// CONSTRUCTOR
 		
 		/**
@@ -33,16 +31,22 @@ package com.studiopixmix.anes.InAppPurchase
 		public function InAppPurchaseANE() {
 			extContext = ExtensionContext.createExtensionContext(EXTENSION_ID, "");
 			
-			extContext.addEventListener(StatusEvent.STATUS, onStatusEvent);
-			
-			if (!extContext)
-				dispatchEvent(new LogEvent("Could not create extension context."));
+			if (extContext != null)
+				extContext.addEventListener(StatusEvent.STATUS, onStatusEvent);
+		}
+		
+		/**
+		 * Whether the ANE is supported on the current device or not.
+		 * Only works on iOS and Android.
+		 */
+		private function isSupported():Boolean {
+			return Capabilities.manufacturer.indexOf('iOS') > -1 || Capabilities.manufacturer.indexOf('Android') > -1;
 		}
 		
 		// METHODS
 		/**
-		 * Called on each Status Event from the native code. Switches on the event level to determine the event type
-		 * and executes the right function.
+		 * Called on each Status Event from the native code.
+		 * According to the event type, we dispatch the corresponding event filled with its data.
 		 */
 		private function onStatusEvent(event:StatusEvent):void {
 			var eventToDispatch:InAppPurchaseANEEvent;
@@ -65,6 +69,9 @@ package com.studiopixmix.anes.InAppPurchase
 		 * Calls the <code>initialize</code> method in the native code. This method MUST be called before doing any in-app purchase.
 		 */
 		public function initialize():void {
+			if (!isSupported())
+				return;
+			
 			extContext.call(NATIVE_METHOD_INITIALIZE);
 		}
 		
@@ -72,6 +79,9 @@ package com.studiopixmix.anes.InAppPurchase
 		 * Request the given products informations.
 		 */
 		public function getProducts(productsIds:Vector.<String>):void {
+			if (!isSupported())
+				return;
+			
 			if (productsIds.length == 0) {
 				dispatchEvent(new ProductsInvalidEvent(productsIds));
 				return;
@@ -85,6 +95,9 @@ package com.studiopixmix.anes.InAppPurchase
 		 * @param devPayload Android-only. Optional.
 		 */
 		public function buyProduct(productId:String, devPayload:String):void {
+			if (!isSupported())
+				return;
+			
 			extContext.call(NATIVE_METHOD_BUY_PRODUCT, productId, devPayload);
 		}
 	}
