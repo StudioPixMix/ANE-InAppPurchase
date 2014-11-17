@@ -12,7 +12,7 @@
 		
 		<platform name="Android-ARM">
 			<applicationDeployment>
-				<nativeLibrary>ANE-InAppPurchase.jar</nativeLibrary>
+				<nativeLibrary>InAppPurchase.jar</nativeLibrary>
 				<initializer>com.studiopixmix.anes.inapppurchase.InAppPurchaseExtension</initializer>
 				<finalizer>com.studiopixmix.anes.inapppurchase.InAppPurchaseExtension</finalizer>
 			</applicationDeployment>
@@ -20,7 +20,7 @@
 		
 		<platform name="Android-x86">
 			<applicationDeployment>
-				<nativeLibrary>ANE-InAppPurchase.jar</nativeLibrary>
+				<nativeLibrary>InAppPurchase.jar</nativeLibrary>
 				<initializer>com.studiopixmix.anes.inapppurchase.InAppPurchaseExtension</initializer>
 				<finalizer>com.studiopixmix.anes.inapppurchase.InAppPurchaseExtension</finalizer>
 			</applicationDeployment>

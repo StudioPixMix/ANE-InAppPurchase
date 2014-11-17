@@ -52,12 +52,6 @@ DEFINE_ANE_FUNCTION(buyProduct) {
         return NULL;
     }
     
-    NSString *applicationUsername;
-    if ([typeConversionHelper FREGetObject:argv[1] asString:&applicationUsername] != FRE_OK) {
-        DISPATCH_ANE_EVENT(context, EVENT_PURCHASE_FAILURE, (uint8_t*)"No applicationUsername provided");
-        return NULL;
-    }
-    
     NSString *logMessage = [NSString stringWithFormat:@"Buying product %@", productId];
     DISPATCH_LOG_EVENT(context, logMessage);
   
@@ -70,7 +64,6 @@ DEFINE_ANE_FUNCTION(buyProduct) {
     
     SKMutablePayment *payment = [SKMutablePayment paymentWithProduct:product];
     payment.quantity = 1;
-    payment.applicationUsername = applicationUsername;
     
     DISPATCH_LOG_EVENT(context, @"Adding SKPayment to the SKPaymentQueue...");
     [[SKPaymentQueue defaultQueue] addPayment:payment];

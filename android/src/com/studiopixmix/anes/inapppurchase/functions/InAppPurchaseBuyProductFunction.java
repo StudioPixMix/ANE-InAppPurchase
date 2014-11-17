@@ -76,7 +76,7 @@ public class InAppPurchaseBuyProductFunction implements FREFunction {
 		catch(Exception e) { InAppPurchaseExtension.logToAS("Error while retrieving the product ID! " + e.toString()); context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASE_FAILURE, e.toString()); return null;}
 		
 		try {
-			buyIntentBundle = context.getInAppBillingService().getBuyIntent(InAppPurchaseExtension.API_VERSION, context.getActivity().getPackageName(), productId, "inapp", "DEVELOPER_PAYLOAD");
+			buyIntentBundle = context.getInAppBillingService().getBuyIntent(InAppPurchaseExtension.API_VERSION, context.getActivity().getPackageName(), productId, "inapp", payload);
 		}
 		catch(Exception e) { InAppPurchaseExtension.logToAS("Error while the buy intent! " + e.toString()); context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASE_FAILURE, e.toString()); return null;}
 		
@@ -114,7 +114,7 @@ public class InAppPurchaseBuyProductFunction implements FREFunction {
 	 */
 	public static void onIntentFinished(Activity sourceActivity, int requestCode, int resultCode, Intent data, String devPayload) {
 		InAppPurchaseExtension.logToAS("Intent finished");
-		
+
 		sourceActivity.finish();
 		sourceActivity = null;
 		
@@ -144,7 +144,7 @@ public class InAppPurchaseBuyProductFunction implements FREFunction {
 		    			return;
 		    		}
 		    		
-		    		consumeProduct(item, context, dataSignature);
+		    		consumeProduct(item, context, purchaseData, dataSignature);
 			    	
 			    }
 			    else {
@@ -170,12 +170,13 @@ public class InAppPurchaseBuyProductFunction implements FREFunction {
 	 * <li> playStoreResponse : the stringified JSON object purchase, in case you may need all the information.</li></ul><br/>
 	 */
 	
-	public static void consumeProduct(JSONObject purchase, InAppPurchaseExtensionContext c, String dataSignature) {
+	public static void consumeProduct(JSONObject purchase, InAppPurchaseExtensionContext c, String originalPurchaseData, String dataSignature) {
 		
 		// The local variables used in the asynchronous task.
 		final JSONObject item = purchase;
 		final InAppPurchaseExtensionContext context = c;
 		final Activity activity = c.getActivity();
+		final String playStoreResponse = originalPurchaseData;
 		final String signature = dataSignature;
 		
 		// The consumePurchase method is synchronous, so it has to be executed in an asynchronous task to avoid blocking the main thread.
@@ -201,7 +202,7 @@ public class InAppPurchaseBuyProductFunction implements FREFunction {
 						data.put("purchaseToken", item.get("purchaseToken"));
 						data.put("orderId", item.get("orderId"));
 						data.put("signature", signature);
-						data.put("playStoreResponse", item.toString());
+						data.put("playStoreResponse", playStoreResponse);
 						
 						InAppPurchaseExtension.logToAS("The product has been successfully consumed! returning it with the event ...");
 						context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASE_SUCCESS, data.toString());

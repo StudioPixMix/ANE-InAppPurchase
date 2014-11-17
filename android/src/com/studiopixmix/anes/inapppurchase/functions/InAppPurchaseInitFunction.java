@@ -62,7 +62,7 @@ public class InAppPurchaseInitFunction implements FREFunction {
 					
 					if(n > 0) {
 						for(i = 0 ; i < n ; i++) {
-							InAppPurchaseBuyProductFunction.consumeProduct(new JSONObject(itemsJson.get(i)), c, dataSignatures.get(i));
+							InAppPurchaseBuyProductFunction.consumeProduct(new JSONObject(itemsJson.get(i)), c, itemsJson.get(i), dataSignatures.get(i));
 						}
 						
 						InAppPurchaseExtension.logToAS(n + " previous item(s) has been consumed.");
