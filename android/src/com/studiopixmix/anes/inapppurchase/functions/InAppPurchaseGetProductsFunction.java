@@ -115,7 +115,7 @@ public class InAppPurchaseGetProductsFunction implements FREFunction {
 							currentJsonObject = new JSONObject(detailsJson.get(i));
 							currentObject = new JSONObject();
 							currentObject.put("id", currentJsonObject.get("productId"));
-							currentObject.put("title", "Ta race");//currentJsonObject.get("title"));
+							currentObject.put("title", currentJsonObject.get("title"));
 							currentObject.put("description", currentJsonObject.get("description"));
 							
 							// Formats the price to an amount rounded to 2 decimals.
