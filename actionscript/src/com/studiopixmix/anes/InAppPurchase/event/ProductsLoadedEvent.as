@@ -29,7 +29,7 @@ package com.studiopixmix.anes.InAppPurchase.event
 				const products:Vector.<InAppPurchaseProduct> = new Vector.<InAppPurchaseProduct>();
 				
 				for (var i:int = 0; i < numProductsInArray; i++)
-					products.push(InAppPurchaseProduct.FromJSONProduct(productsArray[0]));
+					products.push(InAppPurchaseProduct.FromJSONProduct(productsArray[i]));
 				
 				return new ProductsLoadedEvent(products);
 			} catch(e:Error) {

@@ -38,7 +38,7 @@
     NSDictionary *purchaseDictionary = @{
         @"productId" : transaction.payment.productIdentifier,
         @"transactionTimestamp" : transactionTimestamp,
-        @"applicationUsername" : transaction.payment.applicationUsername,
+        @"applicationUsername" : (transaction.payment.applicationUsername != nil ? transaction.payment.applicationUsername : @""),
         @"transactionId" : transaction.transactionIdentifier,
         @"transactionReceipt" : [[NSString alloc] initWithData:transaction.transactionReceipt encoding:NSUTF8StringEncoding]
     };

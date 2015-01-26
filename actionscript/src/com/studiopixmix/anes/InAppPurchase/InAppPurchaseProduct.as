@@ -27,6 +27,10 @@ package com.studiopixmix.anes.InAppPurchase
 		 */
 		public var price:Number;
 		
+		public var priceCurrencyCode:String;
+		
+		public var priceCurrencySymbol:String;
+		
 		// CONSTRUCTOR
 		public function InAppPurchaseProduct() {
 		}
@@ -41,8 +45,14 @@ package com.studiopixmix.anes.InAppPurchase
 			product.title = jsonProduct.title;
 			product.description = jsonProduct.description;
 			product.price = jsonProduct.price;
+			product.priceCurrencyCode = jsonProduct.priceCurrencyCode;
+			product.priceCurrencySymbol = jsonProduct.priceCurrencySymbol;
 			
 			return product;
+		}
+		
+		public function getPriceToDisplay(withNbsp:Boolean=false):String {
+			return price + (withNbsp ? "&nbsp;" : " ") + priceCurrencySymbol; 
 		}
 		
 		public function toString():String {

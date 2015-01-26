@@ -68,6 +68,8 @@
      product.localizedTitle, @"title",
      product.localizedDescription, @"description",
      product.price, @"price",
+     [product.priceLocale objectForKey:NSLocaleCurrencyCode], @"priceCurrencyCode",
+     [product.priceLocale objectForKey:NSLocaleCurrencySymbol], @"priceCurrencySymbol",
      nil];
 }
 @end
