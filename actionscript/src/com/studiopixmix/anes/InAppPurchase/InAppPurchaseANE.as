@@ -100,13 +100,5 @@ package com.studiopixmix.anes.InAppPurchase
 			
 			extContext.call(NATIVE_METHOD_BUY_PRODUCT, productId, devPayload);
 		}
-		
-		
-		public function getCountry():String {
-			if (!isSupported())
-				return null;
-			
-			return extContext.call("getCountry") as String;
-		}
 	}
 }
