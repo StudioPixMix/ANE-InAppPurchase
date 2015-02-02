@@ -63,6 +63,11 @@
 }
 
 - (NSDictionary *) buildJSONDictionaryOfProduct:(SKProduct *)product {
+    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+    [numberFormatter setFormatterBehavior:NSNumberFormatterBehavior10_4];
+    [numberFormatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+    [numberFormatter setLocale:product.priceLocale];
+    
     return [NSDictionary dictionaryWithObjectsAndKeys:
      product.productIdentifier, @"id",
      product.localizedTitle, @"title",
@@ -70,6 +75,7 @@
      product.price, @"price",
      [product.priceLocale objectForKey:NSLocaleCurrencyCode], @"priceCurrencyCode",
      [product.priceLocale objectForKey:NSLocaleCurrencySymbol], @"priceCurrencySymbol",
+     [numberFormatter stringFromNumber:product.price], @"displayPrice",
      nil];
 }
 @end

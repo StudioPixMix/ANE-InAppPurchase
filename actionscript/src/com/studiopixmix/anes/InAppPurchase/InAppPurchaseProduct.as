@@ -31,6 +31,8 @@ package com.studiopixmix.anes.InAppPurchase
 		
 		public var priceCurrencySymbol:String;
 		
+		public var displayPrice:String;
+		
 		// CONSTRUCTOR
 		public function InAppPurchaseProduct() {
 		}
@@ -47,16 +49,20 @@ package com.studiopixmix.anes.InAppPurchase
 			product.price = jsonProduct.price;
 			product.priceCurrencyCode = jsonProduct.priceCurrencyCode;
 			product.priceCurrencySymbol = jsonProduct.priceCurrencySymbol;
+			product.displayPrice = jsonProduct.displayPrice;
 			
 			return product;
 		}
 		
 		public function getPriceToDisplay(withNbsp:Boolean=false):String {
-			return price + (withNbsp ? "&nbsp;" : " ") + priceCurrencySymbol; 
+			if (withNbsp)
+				return displayPrice.replace(" ", "&nbsp;");
+				
+			return displayPrice;
 		}
 		
 		public function toString():String {
-			return "<InAppPurchaseProduct[id:" + id + ", title:" + title + ", price:" + price + "]>";
+			return "<InAppPurchaseProduct[id:" + id + ", title:" + title + ", price:" + price + ", priceCurrencyCode:" + priceCurrencyCode + ", priceCurrencySymbol:" + priceCurrencySymbol + ", displayPrice:" + displayPrice + "]>";
 		}
 	}
 }
