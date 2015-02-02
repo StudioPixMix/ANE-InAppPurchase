@@ -124,6 +124,10 @@ public class InAppPurchaseGetProductsFunction implements FREFunction {
 							
 							currentObject.put("priceCurrencyCode", currentJsonObject.get("price_currency_code"));
 							currentObject.put("priceCurrencySymbol", currentJsonObject.get("price").toString().replaceAll("[0-9.,\\s]", ""));
+							
+							// The fully formated price to display in your app, with the currency symbol.
+							currentObject.put("displayPrice", currentJsonObject.get("price").toString());
+							
 							details.add(currentObject);
 							
 							// removes the current product ID from the ids received as parameters.
