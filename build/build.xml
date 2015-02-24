@@ -75,7 +75,7 @@
 			<env key="AIR_SDK_HOME" value="${flex.sdk}"/>
 			<arg line='-source-path ../actionscript/src' />
 			<arg line='-output ../bin/actionscript/ios/${name}.swc' />
-			<arg line='-swf-version=13' />
+			<arg line='-swf-version=27' />
 			<arg line='-external-library-path+="${flex.sdk}/frameworks/libs/air/airglobal.swc"' />
 			<arg line='-include-classes ${classlist.ios}' />
 		</exec>
@@ -97,7 +97,7 @@
 			<env key="AIR_SDK_HOME" value="${flex.sdk}"/>
 			<arg line='-source-path ../actionscript/src' />
 			<arg line='-output ../bin/actionscript/android/${name}.swc' />
-			<arg line='-swf-version=13' />
+			<arg line='-swf-version=27' />
 			<arg line='-external-library-path+="${flex.sdk}/frameworks/libs/air/airglobal.swc"' />
 			<arg line='-include-classes ${classlist.android}' />
 		</exec>
@@ -119,7 +119,7 @@
 			<env key="AIR_SDK_HOME" value="${flex.sdk}"/>
 			<arg line='-source-path ../actionscript/src' />
 			<arg line='-output ../bin/actionscript/default/${name}.swc' />
-			<arg line='-swf-version=13' />
+			<arg line='-swf-version=27' />
 			<arg line='-external-library-path+="${flex.sdk}/frameworks/libs/air/airglobal.swc"' />
 			<arg line='-include-classes ${classlist.default}' />
 		</exec>
