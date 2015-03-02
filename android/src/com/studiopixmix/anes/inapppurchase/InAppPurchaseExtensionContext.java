@@ -13,6 +13,7 @@ import com.android.vending.billing.IInAppBillingService;
 import com.studiopixmix.anes.inapppurchase.functions.InAppPurchaseBuyProductFunction;
 import com.studiopixmix.anes.inapppurchase.functions.InAppPurchaseGetProductsFunction;
 import com.studiopixmix.anes.inapppurchase.functions.InAppPurchaseInitFunction;
+import com.studiopixmix.anes.inapppurchase.functions.InAppPurchaseRestorePurchasesFunction;
 
 public class InAppPurchaseExtensionContext extends FREContext {
 	
@@ -94,6 +95,7 @@ public class InAppPurchaseExtensionContext extends FREContext {
 		functions.put("initialize", new InAppPurchaseInitFunction());
 		functions.put("getProducts", new InAppPurchaseGetProductsFunction());
 		functions.put("buyProduct", new InAppPurchaseBuyProductFunction());
+		functions.put("restorePurchase", new InAppPurchaseRestorePurchasesFunction());
 		
 		InAppPurchaseExtension.log(functions.size() + " extension functions declared.");
 		
