@@ -17,4 +17,8 @@ public class InAppPurchaseMessages {
 	public static final String PURCHASE_SUCCESS = "EVENT_PURCHASE_SUCCESS";
 	/** Event dispatched when one or more invalid product(s) have been passed to getProducts or buyProducts. */
 	public static final String PRODUCTS_INVALID = "EVENT_PRODUCTS_INVALID";
+	/** Event dispatched when calling the <code>restorePurchase</code> function. Dispatched after having requested the store for the user's previous purchases. */
+	public static final String PURCHASES_RETRIEVED = "EVENT_PURCHASES_RETRIEVED";
+	/** Event dispatched when the call to <code>getPurchases</code> failed. */
+	public static final String PURCHASES_RETRIEVING_FAILED = "EVENT_PURCHASES_RETRIEVING_FAILED";
 }

@@ -14,7 +14,6 @@ import android.os.RemoteException;
 
 import com.adobe.fre.FREArray;
 import com.adobe.fre.FREContext;
-import com.adobe.fre.FREExtension;
 import com.adobe.fre.FREFunction;
 import com.adobe.fre.FREObject;
 import com.android.vending.billing.IInAppBillingService;

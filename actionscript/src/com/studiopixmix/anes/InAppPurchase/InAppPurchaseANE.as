@@ -19,6 +19,7 @@ package com.studiopixmix.anes.InAppPurchase
 		private static const NATIVE_METHOD_GET_PRODUCTS:String = "getProducts";
 		private static const NATIVE_METHOD_INITIALIZE:String = "initialize";
 		private static const NATIVE_METHOD_BUY_PRODUCT:String = "buyProduct";
+		private static const NATIVE_METHOD_RESTORE_PURCHASES:String = "restorePurchase";
 		
 		// PROPERTIES
 		private var extContext:ExtensionContext;
@@ -99,6 +100,18 @@ package com.studiopixmix.anes.InAppPurchase
 				return;
 			
 			extContext.call(NATIVE_METHOD_BUY_PRODUCT, productId, devPayload);
+		}
+		
+		
+		/**
+		 * Requests the native store to get the user's previous purchases. This will return a list of the
+		 * purchased product IDs that can be used in the app to restore the user's purchases.
+		 */
+		public function restorePurchases():void {
+			if(!isSupported())
+				return;
+			
+			extContext.call(NATIVE_METHOD_RESTORE_PURCHASES);
 		}
 	}
 }
