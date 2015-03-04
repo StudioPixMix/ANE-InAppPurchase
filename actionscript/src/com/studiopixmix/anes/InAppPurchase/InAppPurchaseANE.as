@@ -110,8 +110,8 @@ package com.studiopixmix.anes.InAppPurchase
 		
 		
 		/**
-		 * Requests the native store to get the user's previous purchases. This will return a list of the
-		 * purchased product IDs that can be used in the app to restore the user's purchases.
+		 * Requests the native store to get the user's previous purchases. This will return a list of product IDs previously purchased
+		 * on the store by the current user. You can use this list in your app to update the unlocked content of your player, for example.
 		 */
 		public function restorePurchases():void {
 			if(!isSupported())

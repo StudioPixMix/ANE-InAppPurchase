@@ -26,7 +26,7 @@ package com.studiopixmix.anes.InAppPurchase.event
 		public static function FromStatusEvent(statusEvent:StatusEvent):PurchasesRetrievedEvent {
 			try {
 				const productIdsAsString:String = statusEvent.level as String;
-				const purchases:Vector.<String> = Vector.<String>(productIdsAsString.split(","));
+				const purchases:Vector.<String> = productIdsAsString != null ? Vector.<String>(productIdsAsString.split(",")) : null;
 				
 				return new PurchasesRetrievedEvent(purchases);
 			} catch (e:Error) {

@@ -25,12 +25,12 @@ public class InAppPurchaseRestorePurchasesFunction implements FREFunction {
 	
 	// CONSTANTS :
 	/** The list of the productIds previously bought by the user. */
-	private static final String INAPP_PURCHASE_ITEM_LIST = "ITEM_ID_LIST";
+	private static final String INAPP_PURCHASE_ITEM_LIST = "INAPP_PURCHASE_ITEM_LIST";
 	/** The response code key used when getting the products details. The differents codes are detailed below. */
 	private static final String RESPONSE_CODE = "RESPONSE_CODE";
 	/** The continuation token used if the list was too long to fit in one request. If this property is not null in the response Bundle, a new call to
 	 * <code>getPurchases</code> should be made with the continuation token as parameter.. */
-	private static final String INAPP_CONTINUATION_TOKEN = "DETAILS_LIST";
+	private static final String INAPP_CONTINUATION_TOKEN = "INAPP_CONTINUATION_TOKEN";
 	
 	
 	/** 
@@ -58,20 +58,30 @@ public class InAppPurchaseRestorePurchasesFunction implements FREFunction {
 		final Activity activity = context.getActivity();
 		final IInAppBillingService iapService = context.getInAppBillingService();
 		
+		InAppPurchaseExtension.logToAS("Restoring the user's purchases ...");
+		
 		// Retrieves the products details.
 		List<String> purchaseIds = null;
 		try {
 			purchaseIds = getPurchaseIds(iapService, activity.getPackageName(), "inapp", null);
+			InAppPurchaseExtension.logToAS("PurchaseIds value : " + purchaseIds);
 		}
-		catch(RemoteException e) {
+		catch(Exception e) {
 			InAppPurchaseExtension.logToAS("Error while retrieving the previous purchases : " + e.toString() + "\n at " + e.getStackTrace());
 			context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASES_RETRIEVING_FAILED, e.getMessage());
 			return null;
 		}
 		
+		if(purchaseIds == null) {
+			InAppPurchaseExtension.logToAS("no purchases to restore, returning ...");
+			context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASES_RETRIEVED, null);
+			return null;
+		}
+		
+		InAppPurchaseExtension.logToAS("Found " + purchaseIds.size() + " purchases to restore ... returning their IDs.");
+		
 		String finalJSON = (new JSONArray(purchaseIds)).toString();
 		context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASES_RETRIEVED, finalJSON);
-		
 		return null;
 	}
 	
@@ -88,11 +98,15 @@ public class InAppPurchaseRestorePurchasesFunction implements FREFunction {
 		// Parsing the received JSON if the response code is success.
 		int responseCode = bundle.getInt(RESPONSE_CODE);
 		ArrayList<String> productsIds = null;
+		
 		if(responseCode == 0) {
 			productsIds = bundle.getStringArrayList(INAPP_PURCHASE_ITEM_LIST);
+			InAppPurchaseExtension.logToAS("Native store returned " + productsIds);
 			String cToken = bundle.getString(INAPP_CONTINUATION_TOKEN);
 			
 			if(continuationToken != null) {
+				InAppPurchaseExtension.logToAS("There is a continuation token, fetching the next purchases ...");
+				
 				// There is a continuation token, retrieving next part ...
 				List<String> ids = getPurchaseIds(iapService, packageName, type, cToken);
 				if(ids != null)
