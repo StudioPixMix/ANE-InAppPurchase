@@ -11,7 +11,6 @@
 #import "ExtensionDefs.h"
 
 @interface TransactionObserver () <SKPaymentTransactionObserver>
-
 @end
 
 @implementation TransactionObserver
@@ -28,9 +27,32 @@
                 [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
                 DISPATCH_ANE_EVENT(self.context, EVENT_PURCHASE_SUCCESS, (uint8_t*)[[self buildJSONStringOfPurchaseWithTransaction:transaction] UTF8String]);
                 break;
+                
+            case SKPaymentTransactionStateRestored:
+                // Does nothing, the restore process will be executed in the paymentQueueRestoreCompletedTransationFinished method.
+                break;
         }
     }
 }
+
+-(void) paymentQueue:(SKPaymentQueue *)queue restoreCompletedTransactionsFailedWithError:(NSError *)error {
+    DISPATCH_ANE_EVENT(self.context, EVENT_PURCHASES_RETRIEVING_FAILED, (uint8_t*) [error.localizedDescription UTF8String]);
+}
+
+-(void)paymentQueueRestoreCompletedTransactionsFinished:(SKPaymentQueue *)queue {
+    NSString *purchases[sizeof(queue.transactions)];
+    int i = 0;
+    
+    for(SKPaymentTransaction *transaction in queue.transactions) {
+        purchases[i] = transaction.payment.productIdentifier;
+        i++;
+    }
+    
+    NSArray *array = [NSArray arrayWithObjects:purchases count:sizeof(queue.transactions)];
+    NSString *result = [[array valueForKey:@"description"] componentsJoinedByString:@","];
+    DISPATCH_ANE_EVENT(self.context, EVENT_PURCHASES_RETRIEVED, (uint8_t*) result.UTF8String);
+}
+
 
 - (NSString *) buildJSONStringOfPurchaseWithTransaction:(SKPaymentTransaction *)transaction {
     NSNumber *transactionTimestamp = [NSNumber numberWithDouble:[transaction.transactionDate timeIntervalSince1970]];

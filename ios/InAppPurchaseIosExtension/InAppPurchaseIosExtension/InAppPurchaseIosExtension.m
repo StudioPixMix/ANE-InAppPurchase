@@ -15,6 +15,7 @@
 #define DEFINE_ANE_FUNCTION(fn) FREObject (fn)(FREContext context, void* functionData, uint32_t argc, FREObject argv[])
 
 #define MAP_FUNCTION(fn, data) { (const uint8_t*)(#fn), (data), &(fn) }
+#define SYSTEM_VERSION_LESS_THAN(v) ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
 
 TypeConversionHelper* typeConversionHelper;
@@ -71,13 +72,24 @@ DEFINE_ANE_FUNCTION(buyProduct) {
     return NULL;
 }
 
+DEFINE_ANE_FUNCTION(restorePurchase) {
+    
+    DISPATCH_LOG_EVENT(context, @"Restoring the previous purchases ...");
+    transactionObserver.context = context;
+    [[SKPaymentQueue defaultQueue] addTransactionObserver:transactionObserver];
+    [[SKPaymentQueue defaultQueue] restoreCompletedTransactions];
+    
+    return NULL;
+}
+
 void InAppPurchaseIosExtensionContextInitializer( void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctionsToSet, const FRENamedFunction** functionsToSet )
 {
     static FRENamedFunction mopubFunctionMap[] =
     {
         MAP_FUNCTION(initialize, NULL),
         MAP_FUNCTION(getProducts, NULL),
-        MAP_FUNCTION(buyProduct, NULL)
+        MAP_FUNCTION(buyProduct, NULL),
+        MAP_FUNCTION(restorePurchase, NULL)
     };
         
     *numFunctionsToSet = sizeof( mopubFunctionMap ) / sizeof( FRENamedFunction );
