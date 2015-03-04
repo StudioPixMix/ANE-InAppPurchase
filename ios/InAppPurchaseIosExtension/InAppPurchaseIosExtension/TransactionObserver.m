@@ -40,16 +40,23 @@
 }
 
 -(void)paymentQueueRestoreCompletedTransactionsFinished:(SKPaymentQueue *)queue {
-    NSString *purchases[sizeof(queue.transactions)];
+    NSMutableArray *purchases = [[NSMutableArray alloc] init];
+    NSString *logMessage;
     int i = 0;
     
+    DISPATCH_LOG_EVENT(self.context, @"Let's get ready for a loop!");
     for(SKPaymentTransaction *transaction in queue.transactions) {
+        logMessage = [NSString stringWithFormat:@"product identifier value : %@", transaction.payment.productIdentifier];
+        DISPATCH_LOG_EVENT(self.context, logMessage);
+        
         purchases[i] = transaction.payment.productIdentifier;
         i++;
     }
     
-    NSArray *array = [NSArray arrayWithObjects:purchases count:sizeof(queue.transactions)];
-    NSString *result = [[array valueForKey:@"description"] componentsJoinedByString:@","];
+    DISPATCH_LOG_EVENT(self.context, @"Purchases array completed.");
+    NSString *result = [[purchases valueForKey:@"description"] componentsJoinedByString:@","];
+    logMessage = [NSString stringWithFormat:@"Complete. Returning the following product IDs list : %@", result];
+    DISPATCH_LOG_EVENT(self.context, logMessage);
     DISPATCH_ANE_EVENT(self.context, EVENT_PURCHASES_RETRIEVED, (uint8_t*) result.UTF8String);
 }
 

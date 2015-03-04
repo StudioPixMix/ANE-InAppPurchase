@@ -19,6 +19,6 @@
 
 
 #define DISPATCH_ANE_EVENT(context, event, data) FREDispatchStatusEventAsync(context, event, data)
-#define DISPATCH_LOG_EVENT(context, logMessage) FREDispatchStatusEventAsync(context, EVENT_LOG, (uint8_t*)logMessage.UTF8String);
+#define DISPATCH_LOG_EVENT(context, logMessage) FREDispatchStatusEventAsync(context, EVENT_LOG, (uint8_t*)logMessage.UTF8String);NSLog(@"%@", logMessage);
 
 #endif
