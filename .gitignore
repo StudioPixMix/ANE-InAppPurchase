@@ -1,3 +1,8 @@
 .DS_Store
 ios/InAppPurchaseIosExtension/InAppPurchaseIosExtension.xcodeproj/project.xcworkspace/xcuserdata/antoinekleinpeter.xcuserdatad/UserInterfaceState.xcuserstate
 build/build.config
+android/.classpath
+actionscript/.actionScriptProperties
+actionscript/.flexLibProperties
+actionscript/.project
+actionscript/.settings/org.eclipse.core.resources.prefs
