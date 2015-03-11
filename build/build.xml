@@ -75,7 +75,7 @@
 			<env key="AIR_SDK_HOME" value="${flex.sdk}"/>
 			<arg line='-source-path ../actionscript/src' />
 			<arg line='-output ../bin/actionscript/ios/${name}.swc' />
-			<arg line='-swf-version=27' />
+			<arg line='-swf-version=${swf.version}' />
 			<arg line='-external-library-path+="${flex.sdk}/frameworks/libs/air/airglobal.swc"' />
 			<arg line='-include-classes ${classlist.ios}' />
 		</exec>
@@ -97,7 +97,7 @@
 			<env key="AIR_SDK_HOME" value="${flex.sdk}"/>
 			<arg line='-source-path ../actionscript/src' />
 			<arg line='-output ../bin/actionscript/android/${name}.swc' />
-			<arg line='-swf-version=27' />
+			<arg line='-swf-version=${swf.version}' />
 			<arg line='-external-library-path+="${flex.sdk}/frameworks/libs/air/airglobal.swc"' />
 			<arg line='-include-classes ${classlist.android}' />
 		</exec>
@@ -119,7 +119,7 @@
 			<env key="AIR_SDK_HOME" value="${flex.sdk}"/>
 			<arg line='-source-path ../actionscript/src' />
 			<arg line='-output ../bin/actionscript/default/${name}.swc' />
-			<arg line='-swf-version=27' />
+			<arg line='-swf-version=${swf.version}' />
 			<arg line='-external-library-path+="${flex.sdk}/frameworks/libs/air/airglobal.swc"' />
 			<arg line='-include-classes ${classlist.default}' />
 		</exec>
@@ -172,6 +172,21 @@
 	<target name="export" description="Export the compiled ANE">
 		<echo message="Exporting the compiled ANE to ${export.dir} ..."/>
 		<copy file="../bin/${name}.ane" todir="${export.dir}" overwrite="true"/>
+		<echo message="Done."/>
+	</target>
+	
+	<!-- ASDoc -->
+	<target name="doc" description="Generate ASDoc">
+		<echo message="Generating asdoc ..."/>
+		<mkdir dir="../doc"/>
+		<exec executable="${flex.sdk}/bin/asdoc${bat.ext}" failonerror="true">
+            <arg line='-load-config="${flex.sdk}/frameworks/airmobile-config.xml"'/>
+			<arg line="-main-title '${name} ANE API Documentation'" />
+            <arg line="-window-title '${name} ANE API Documentation'" />
+            <arg line="-source-path ../actionscript/src" />
+			<arg line="-doc-sources ../actionscript/src" />
+			<arg line="-output ../doc" />
+        </exec>
 		<echo message="Done."/>
 	</target>
 </project>

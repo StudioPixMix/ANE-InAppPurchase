@@ -20,23 +20,25 @@ public class InAppPurchaseExtensionContext extends FREContext {
 	// PROPERTIES :
 	/** The service used to connect the application to the InAppBillingService on Google Play. */
 	private IInAppBillingService mService;
-	private ServiceConnection mServiceConn = new ServiceConnection() {
-	   @Override
-	   public void onServiceDisconnected(ComponentName name) {
-	       mService = null;
-	   }
-
-	   @Override
-	   public void onServiceConnected(ComponentName name, 
-	      IBinder service) {
-	       mService = IInAppBillingService.Stub.asInterface(service);
-	       checkPreviousPurchases();
-	   }
-	};
+	private ServiceConnection mServiceConn;
 	
 	// CONSTRUCTOR :
 	public InAppPurchaseExtensionContext() {
 		super();
+		
+		this.mServiceConn = new ServiceConnection() {
+		   @Override
+		   public void onServiceDisconnected(ComponentName name) {
+		       mService = null;
+		   }
+
+		   @Override
+		   public void onServiceConnected(ComponentName name, IBinder service) {
+		       mService = IInAppBillingService.Stub.asInterface(service);
+		       checkPreviousPurchases();
+		       onInitComplete();
+		   }
+		};
 	}
 	
 	
@@ -58,6 +60,14 @@ public class InAppPurchaseExtensionContext extends FREContext {
 	 */
 	public ServiceConnection getServiceConnection() {
 		return this.mServiceConn;
+	}
+	
+	/**
+	 * Informs the AS side that the initialize process is complete.
+	 */
+	private void onInitComplete() {
+		InAppPurchaseExtension.logToAS("Connected to device's IAP service.");
+		dispatchStatusEventAsync(InAppPurchaseMessages.INITIALIZED, "");
 	}
 	
 	/**

@@ -52,8 +52,8 @@ public class InAppPurchaseInitFunction implements FREFunction {
 			protected Void doInBackground(Void... params) {
 				try {
 					
+					InAppPurchaseExtension.logToAS("Trying to finalize incomplete previous purchases ...");
 					Bundle previousPurchases = iapService.getPurchases(InAppPurchaseExtension.API_VERSION, packageName, "inapp", null);
-					InAppPurchaseExtension.logToAS("After getPurchases");
 					
 					ArrayList<String> itemsJson = previousPurchases.getStringArrayList("INAPP_PURCHASE_DATA_LIST");
 					ArrayList<String> dataSignatures = previousPurchases.getStringArrayList("INAPP_DATA_SIGNATURE_LIST");
