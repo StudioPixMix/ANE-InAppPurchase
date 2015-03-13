@@ -159,7 +159,8 @@ package com.studiopixmix.anes.InAppPurchase
 			else if (event.code == INITIALIZED)
 				onInitialized();
 			
-			dispatchEvent(eventToDispatch);
+			if(eventToDispatch != null)
+				dispatchEvent(eventToDispatch);
 		}
 		
 		/**
