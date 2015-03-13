@@ -10,6 +10,7 @@
 #define InAppPurchaseIosExtension_ExtensionEvent_h
 
 #define EVENT_LOG (uint8_t*)[@"EVENT_LOG" UTF8String]
+#define EVENT_INITIALIZED (uint8_t*)[@"EVENT_INITIALIZED" UTF8String]
 #define EVENT_PRODUCTS_LOADED (uint8_t*)[@"EVENT_PRODUCTS_LOADED" UTF8String]
 #define EVENT_PRODUCTS_INVALID (uint8_t*)[@"EVENT_PRODUCTS_INVALID" UTF8String]
 #define EVENT_PURCHASE_SUCCESS (uint8_t*)[@"EVENT_PURCHASE_SUCCESS" UTF8String]
