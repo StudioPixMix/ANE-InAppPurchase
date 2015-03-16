@@ -5,26 +5,26 @@ h1. Air Native Extension for In-app purchases on iOS and Android (ARM and x86)
 
 ```xml
 <android>
-    <manifestAdditions><![CDATA[
-        <manifest android:installLocation="auto">
-            
-            ...
-			
+	<manifestAdditions><![CDATA[
+		<manifest android:installLocation="auto">
+
+			...
+
 			<!-- IN APP PURCHASE -->
 			<uses-permission android:name="com.android.vending.BILLING" />
-            
-            ...
 
-            <application>
+			...
 
-                ...
-                
+			<application>
+
+				...
+
 				<!-- IN APP PURCHASE -->
 				<activity android:name="com.studiopixmix.anes.inapppurchase.activities.BillingActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
-                
-            </application>
 
-        </manifest>
-    ]]></manifestAdditions>
+			</application>
+
+		</manifest>
+	]]></manifestAdditions>
 </android>
 ```
