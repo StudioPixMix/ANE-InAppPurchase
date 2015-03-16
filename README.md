@@ -1,4 +1,5 @@
-h1. Air Native Extension for In-app purchases on iOS and Android (ARM and x86)
+Air Native Extension for In-app purchases on iOS and Android (ARM and x86)
+==================================
 
 - Android In-app Billing Version 3 API. 
 - Add this to you android manifest :
