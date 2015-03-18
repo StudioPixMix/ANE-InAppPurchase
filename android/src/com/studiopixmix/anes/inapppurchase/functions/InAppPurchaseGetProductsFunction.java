@@ -57,11 +57,15 @@ public class InAppPurchaseGetProductsFunction implements FREFunction {
 	@Override
 	public FREObject call(FREContext c, FREObject[] args) {
 		
+		InAppPurchaseExtension.logToAS("Getting products from the native store ...");
+		
 		// The local variables have to be final, so it can be used in the async task.
 		final InAppPurchaseExtensionContext context = (InAppPurchaseExtensionContext) c;
 		final Activity activity = context.getActivity();
 		final ArrayList<String> productsIds = FREArrayToArrayList((FREArray) args[0]);
 		final IInAppBillingService iapService = context.getInAppBillingService();
+		
+		InAppPurchaseExtension.logToAS("Executing in background ... Activity : " + activity + " (activity package name : " + activity.getPackageName() + ") ; Service : " + iapService);
 		
 		// The getSkuDetails method is synchronous, so it has to be executed in an asynchronous task to avoid blocking the main thread.
 		(new AsyncTask<Void, Void, Void>() {
@@ -71,6 +75,7 @@ public class InAppPurchaseGetProductsFunction implements FREFunction {
 				// Converts the given data to a bundle of products IDs.
 				Bundle products = new Bundle();
 				products.putStringArrayList(ITEM_ID_LIST, productsIds);
+				InAppPurchaseExtension.logToAS("Requesting the store for the products " + productsIds.toString());
 				
 				// Retrieves the products details.
 				Bundle skuDetails = null;
@@ -82,9 +87,17 @@ public class InAppPurchaseGetProductsFunction implements FREFunction {
 					return null;
 				}
 				
+				if(skuDetails == null) {
+					InAppPurchaseExtension.logToAS("Error while retrieving the products details : The returned products bundle is null!");
+					return null;
+				}
+				
+				InAppPurchaseExtension.logToAS("Processing the received products bundle from the store ...");
+				
 				
 				// Parsing the received JSON if the response code is success.
 				int responseCode = skuDetails.getInt(RESPONSE_CODE);
+				InAppPurchaseExtension.logToAS("Response code : " + ERRORS_MESSAGES.get(responseCode));
 				ArrayList<String> detailsJson;
 				String finalJSON = null;
 				if(responseCode == 0) {
@@ -138,9 +151,12 @@ public class InAppPurchaseGetProductsFunction implements FREFunction {
 						}
 					}
 					
+					InAppPurchaseExtension.logToAS("Processed.");
+					InAppPurchaseExtension.logToAS("Found " + details.size() + " products.");
 					JSONArray data = new JSONArray(details);
 					finalJSON = data.toString();
 					
+					InAppPurchaseExtension.logToAS("Returning " + finalJSON + " to the app.");
 					
 					// Check if there is IDs left in productIds. If this is the case, there were invalid products in the parameters.
 					if(productsIds.size() > 0) {
