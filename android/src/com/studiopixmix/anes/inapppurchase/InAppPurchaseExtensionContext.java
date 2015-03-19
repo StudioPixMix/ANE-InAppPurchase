@@ -28,8 +28,6 @@ public class InAppPurchaseExtensionContext extends FREContext {
 	 * will remain empty, as the Runnables can be executed right now ; if the service connection is lost, the Runnables will
 	 * be enqueued to wait for the service reconnection. */
 	private List<Runnable> tasksQueue;
-	/** Set to false at the first successful connection to the InAppBillingService. Used to call <code>onInitComplete</code> only once. */
-	private Boolean firstConnection;
 	/** Whether the tasks queue is currently processing or not. Avoids to call several tasks at the same time. */
 	private Boolean isExecuting = false;
 	
@@ -38,8 +36,6 @@ public class InAppPurchaseExtensionContext extends FREContext {
 		super();
 		
 		tasksQueue = new ArrayList<Runnable>();
-		firstConnection = true;
-		
 		connectToService();
 	}
 	
@@ -69,19 +65,12 @@ public class InAppPurchaseExtensionContext extends FREContext {
 		   public void onServiceConnected(ComponentName name, IBinder service) {
 		       mService = IInAppBillingService.Stub.asInterface(service);
 		       checkPreviousPurchases();
-		       
-		       if(firstConnection) {
-		    	   firstConnection = false;
-		    	   onInitComplete();
-		       }
 		       InAppPurchaseExtension.logToAS("Service connected.");
 		       
 		       processTasksQueue();
 		   }
 		};
 	}
-	
-	
 	
 	
 	
@@ -137,14 +126,6 @@ public class InAppPurchaseExtensionContext extends FREContext {
 	 */
 	public ServiceConnection getServiceConnection() {
 		return this.mServiceConn;
-	}
-	
-	/**
-	 * Informs the AS side that the initialize process is complete.
-	 */
-	private void onInitComplete() {
-		InAppPurchaseExtension.logToAS("Connected to device's IAP service.");
-		dispatchStatusEventAsync(InAppPurchaseMessages.INITIALIZED, "");
 	}
 	
 	/**
