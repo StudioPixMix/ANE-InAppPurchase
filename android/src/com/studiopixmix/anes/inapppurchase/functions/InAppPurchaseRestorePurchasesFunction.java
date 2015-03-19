@@ -53,35 +53,42 @@ public class InAppPurchaseRestorePurchasesFunction implements FREFunction {
 	@Override
 	public FREObject call(FREContext c, FREObject[] args) {
 		
-		// The local variables have to be final, so it can be used in the async task.
 		final InAppPurchaseExtensionContext context = (InAppPurchaseExtensionContext) c;
-		final Activity activity = context.getActivity();
-		final IInAppBillingService iapService = context.getInAppBillingService();
 		
-		InAppPurchaseExtension.logToAS("Restoring the user's purchases ...");
+		context.executeWithService(new Runnable() {
+			@Override
+			public void run() {
+				// The local variables have to be final, so it can be used in the async task.
+				final Activity activity = context.getActivity();
+				final IInAppBillingService iapService = context.getInAppBillingService();
+				
+				InAppPurchaseExtension.logToAS("Restoring the user's purchases ...");
+				
+				// Retrieves the products details.
+				List<String> purchaseIds = null;
+				try {
+					purchaseIds = getPurchaseIds(iapService, activity.getPackageName(), "inapp", null);
+					InAppPurchaseExtension.logToAS("PurchaseIds value : " + purchaseIds);
+				}
+				catch(Exception e) {
+					InAppPurchaseExtension.logToAS("Error while retrieving the previous purchases : " + e.toString() + "\n at " + e.getStackTrace());
+					context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASES_RETRIEVING_FAILED, e.getMessage());
+					return;
+				}
+				
+				if(purchaseIds == null) {
+					InAppPurchaseExtension.logToAS("no purchases to restore, returning ...");
+					context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASES_RETRIEVED, null);
+					return;
+				}
+				
+				InAppPurchaseExtension.logToAS("Found " + purchaseIds.size() + " purchases to restore ... returning their IDs.");
+				
+				String finalJSON = (new JSONArray(purchaseIds)).toString();
+				context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASES_RETRIEVED, finalJSON);
+			}
+		});
 		
-		// Retrieves the products details.
-		List<String> purchaseIds = null;
-		try {
-			purchaseIds = getPurchaseIds(iapService, activity.getPackageName(), "inapp", null);
-			InAppPurchaseExtension.logToAS("PurchaseIds value : " + purchaseIds);
-		}
-		catch(Exception e) {
-			InAppPurchaseExtension.logToAS("Error while retrieving the previous purchases : " + e.toString() + "\n at " + e.getStackTrace());
-			context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASES_RETRIEVING_FAILED, e.getMessage());
-			return null;
-		}
-		
-		if(purchaseIds == null) {
-			InAppPurchaseExtension.logToAS("no purchases to restore, returning ...");
-			context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASES_RETRIEVED, null);
-			return null;
-		}
-		
-		InAppPurchaseExtension.logToAS("Found " + purchaseIds.size() + " purchases to restore ... returning their IDs.");
-		
-		String finalJSON = (new JSONArray(purchaseIds)).toString();
-		context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASES_RETRIEVED, finalJSON);
 		return null;
 	}
 	

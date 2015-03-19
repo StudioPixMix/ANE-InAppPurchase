@@ -181,6 +181,7 @@ mRemote = remote;
 {
 return mRemote;
 }
+@SuppressWarnings("unused")
 public java.lang.String getInterfaceDescriptor()
 {
 return DESCRIPTOR;

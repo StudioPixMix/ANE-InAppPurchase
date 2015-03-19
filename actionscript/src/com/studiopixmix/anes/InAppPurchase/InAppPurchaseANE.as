@@ -29,13 +29,8 @@ package com.studiopixmix.anes.InAppPurchase
 		private static const NATIVE_METHOD_BUY_PRODUCT:String = "buyProduct";
 		private static const NATIVE_METHOD_RESTORE_PURCHASES:String = "restorePurchase";
 		
-		private static const INITIALIZED:String = "EVENT_INITIALIZED";
-		
 		// PROPERTIES
 		private var extContext:ExtensionContext;
-		private var isInitialized:Boolean;
-		private var pendingFunctionsToCall:Vector.<Function>;
-		private var pendingArguments:Vector.<Array>;
 		
 		
 		// CONSTRUCTOR
@@ -43,10 +38,6 @@ package com.studiopixmix.anes.InAppPurchase
 		 * Creates the extension context if possible. Call <code>initialize()</code> before using the rest of the extension.
 		 */
 		public function InAppPurchaseANE() {
-			isInitialized = false;
-			pendingFunctionsToCall = new Vector.<Function>();
-			pendingArguments = new Vector.<Array>();
-			
 			extContext = ExtensionContext.createExtensionContext(EXTENSION_ID, "");
 			
 			if (extContext != null)
@@ -75,11 +66,6 @@ package com.studiopixmix.anes.InAppPurchase
 			if (!isSupported())
 				return;
 			
-			if (!isInitialized) {
-				enqueueUntilInitCompletes(getProducts, [productsIds]);
-				return;
-			}
-			
 			if (productsIds.length == 0) {
 				dispatchEvent(new ProductsInvalidEvent(productsIds));
 				return;
@@ -98,11 +84,6 @@ package com.studiopixmix.anes.InAppPurchase
 			if (!isSupported())
 				return;
 			
-			if (!isInitialized) {
-				enqueueUntilInitCompletes(buyProduct, [productId, devPayload]);
-				return;
-			}
-			
 			extContext.call(NATIVE_METHOD_BUY_PRODUCT, productId, devPayload);
 		}
 		
@@ -114,11 +95,6 @@ package com.studiopixmix.anes.InAppPurchase
 		public function restorePurchases():void {
 			if(!isSupported())
 				return;
-			
-			if (!isInitialized) {
-				enqueueUntilInitCompletes(restorePurchases, []);
-				return;
-			}
 			
 			extContext.call(NATIVE_METHOD_RESTORE_PURCHASES);
 		}
@@ -159,31 +135,9 @@ package com.studiopixmix.anes.InAppPurchase
 				eventToDispatch = PurchasesRetrievedEvent.FromStatusEvent(event);
 			else if (event.code == InAppPurchaseANEEvent.PURCHASES_RETRIEVING_FAILED)
 				eventToDispatch = PurchasesRetrievingFailed.FromStatusEvent(event);
-			else if (event.code == INITIALIZED)
-				onInitialized();
 			
 			if(eventToDispatch != null)
 				dispatchEvent(eventToDispatch);
-		}
-		
-		/**
-		 * Enqueues the given function call until the ANE is initialized.
-		 */
-		private function enqueueUntilInitCompletes(methodToCall:Function, arguments:Array):void {
-			pendingFunctionsToCall.push(methodToCall);
-			pendingArguments.push(arguments);
-		}
-		
-		/**
-		 * Executes all pending methods calls registered during initialization.
-		 */
-		private function onInitialized():void {
-			isInitialized = true;
-			
-			var i:int, n:int = pendingFunctionsToCall.length;
-			for(i = 0 ; i < n ; i++) {
-				pendingFunctionsToCall[i].apply(this, pendingArguments[i]);
-			}
 		}
 	}
 }
