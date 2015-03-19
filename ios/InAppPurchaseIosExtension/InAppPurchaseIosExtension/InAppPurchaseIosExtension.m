@@ -27,7 +27,6 @@ DEFINE_ANE_FUNCTION(initialize) {
     [[SKPaymentQueue defaultQueue] addTransactionObserver:transactionObserver];
     
     DISPATCH_LOG_EVENT(context, @"In app purchase ANE initialized on iOS.");
-    DISPATCH_ANE_EVENT(context, EVENT_INITIALIZED, (uint8_t*)"");
     return NULL;
 }
 
