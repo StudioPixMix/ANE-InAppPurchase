@@ -20,7 +20,10 @@
         switch (transaction.transactionState) {
             case SKPaymentTransactionStateFailed:
                 [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
-                DISPATCH_ANE_EVENT(self.context, EVENT_PURCHASE_FAILURE, (uint8_t*)[transaction.error.localizedDescription UTF8String]);
+                if(transaction.error.code == SKErrorPaymentCancelled)
+                    DISPATCH_ANE_EVENT(self.context, EVENT_PURCHASE_CANCELED, (uint8_t*)[transaction.error.localizedDescription UTF8String]);
+                else
+                    DISPATCH_ANE_EVENT(self.context, EVENT_PURCHASE_FAILURE, (uint8_t*)[transaction.error.localizedDescription UTF8String]);
                 break;
             
             case SKPaymentTransactionStatePurchased:
