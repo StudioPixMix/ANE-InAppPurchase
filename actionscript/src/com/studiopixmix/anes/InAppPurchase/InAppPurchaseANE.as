@@ -4,6 +4,7 @@ package com.studiopixmix.anes.InAppPurchase
 	import com.studiopixmix.anes.InAppPurchase.event.LogEvent;
 	import com.studiopixmix.anes.InAppPurchase.event.ProductsInvalidEvent;
 	import com.studiopixmix.anes.InAppPurchase.event.ProductsLoadedEvent;
+	import com.studiopixmix.anes.InAppPurchase.event.PurchaseCanceledEvent;
 	import com.studiopixmix.anes.InAppPurchase.event.PurchaseFailureEvent;
 	import com.studiopixmix.anes.InAppPurchase.event.PurchaseSuccessEvent;
 	import com.studiopixmix.anes.InAppPurchase.event.PurchasesRetrievedEvent;
@@ -88,7 +89,7 @@ package com.studiopixmix.anes.InAppPurchase
 		}
 		
 		/**
-		 * Buys the given product. Dispatches PURCHASE_SUCCESS and PURCHASE_FAILURE events.
+		 * Buys the given product. Dispatches PURCHASE_SUCCESS, PURCHASE_CANCELED and PURCHASE_FAILURE events.
 		 * 
 		 * @param productId		The native product ID
 		 * @param devPayload 	An optional developper payload (Android-only)
@@ -150,6 +151,8 @@ package com.studiopixmix.anes.InAppPurchase
 				eventToDispatch = ProductsInvalidEvent.FromStatusEvent(event);
 			else if (event.code == InAppPurchaseANEEvent.PURCHASE_SUCCESS)
 				eventToDispatch = PurchaseSuccessEvent.FromStatusEvent(event);
+			else if (event.code == InAppPurchaseANEEvent.PURCHASE_CANCELED)
+				eventToDispatch = PurchaseCanceledEvent.FromStatusEvent(event);
 			else if (event.code == InAppPurchaseANEEvent.PURCHASE_FAILURE)
 				eventToDispatch = PurchaseFailureEvent.FromStatusEvent(event);
 			else if (event.code == InAppPurchaseANEEvent.PURCHASES_RETRIEVED)

@@ -32,6 +32,16 @@ public class InAppPurchaseBuyProductFunction implements FREFunction {
 	private static final int BUY_REQUEST_CODE = 111111;  //  -> arbitrary picked request code.
 	
 	
+	// Billing response codes
+    public static final int BILLING_RESPONSE_RESULT_OK = 0;
+    public static final int BILLING_RESPONSE_RESULT_USER_CANCELED = 1;
+    public static final int BILLING_RESPONSE_RESULT_BILLING_UNAVAILABLE = 3;
+    public static final int BILLING_RESPONSE_RESULT_ITEM_UNAVAILABLE = 4;
+    public static final int BILLING_RESPONSE_RESULT_DEVELOPER_ERROR = 5;
+    public static final int BILLING_RESPONSE_RESULT_ERROR = 6;
+    public static final int BILLING_RESPONSE_RESULT_ITEM_ALREADY_OWNED = 7;
+    public static final int BILLING_RESPONSE_RESULT_ITEM_NOT_OWNED = 8;
+	
 	/** 
 	 * The error codes messages, in String, as described in the Google documentation. 
 	 * 
@@ -82,7 +92,7 @@ public class InAppPurchaseBuyProductFunction implements FREFunction {
 		
 		
 		int responseCode = buyIntentBundle.getInt(RESPONSE_CODE);
-		if(responseCode == 0) {
+		if(responseCode == BILLING_RESPONSE_RESULT_OK) {
 			
 			// Everything's fine, starting the buy intent.
 			PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
@@ -96,13 +106,18 @@ public class InAppPurchaseBuyProductFunction implements FREFunction {
 				context.getActivity().startActivity(intent);
 			}
 			catch(Exception e) { 
-					InAppPurchaseExtension.logToAS("Error while the buy intent!\n " + e.toString() + "\n" + InAppPurchaseExtension.getStackString(e));
-					context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASE_FAILURE, e.toString()); 
-					return null;
-				}
+				InAppPurchaseExtension.logToAS("Error while the buy intent!\n " + e.toString() + "\n" + InAppPurchaseExtension.getStackString(e));
+				context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASE_FAILURE, e.toString()); 
+				return null;
+			}
+		}
+		else if(responseCode == BILLING_RESPONSE_RESULT_USER_CANCELED) {
+			InAppPurchaseExtension.logToAS("User cancelled the purchase.");
+			context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASE_CANCELED, ""); 
 		}
 		else {
 			InAppPurchaseExtension.logToAS("Error while the buy intent : " + ERRORS_MESSAGES.get(responseCode));
+			context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASE_FAILURE, ERRORS_MESSAGES.get(responseCode));
 		}
 		
 		return null;
@@ -122,14 +137,14 @@ public class InAppPurchaseBuyProductFunction implements FREFunction {
 			
 			if(resultCode == Activity.RESULT_CANCELED) {
 				InAppPurchaseExtension.logToAS("Purchase has been cancelled!");
-				context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASE_FAILURE, "Purchase has been cancelled!");
+				context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASE_CANCELED, "");
 			}
 			else {
 				int responseCode = data.getIntExtra("RESPONSE_CODE", 0);
 			    String purchaseData = data.getStringExtra("INAPP_PURCHASE_DATA");
 			    String dataSignature = data.getStringExtra("INAPP_DATA_SIGNATURE");
 			    
-			    if(responseCode == 0) {
+			    if(responseCode == BILLING_RESPONSE_RESULT_OK) {
 			    	JSONObject item = null;
 			    	Boolean hasSimilarPayload = false;
 			    	try {
@@ -146,6 +161,10 @@ public class InAppPurchaseBuyProductFunction implements FREFunction {
 		    		
 		    		consumeProduct(item, context, purchaseData, dataSignature);
 			    	
+			    }
+			    else if(responseCode == BILLING_RESPONSE_RESULT_USER_CANCELED) {
+			    	InAppPurchaseExtension.logToAS("Purchase has been cancelled!");
+					context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASE_CANCELED, "");
 			    }
 			    else {
 			    	InAppPurchaseExtension.logToAS("The purchase failed! " + ERRORS_MESSAGES.get(responseCode));
