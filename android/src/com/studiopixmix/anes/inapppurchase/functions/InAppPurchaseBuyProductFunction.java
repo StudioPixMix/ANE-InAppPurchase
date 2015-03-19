@@ -60,50 +60,63 @@ public class InAppPurchaseBuyProductFunction implements FREFunction {
 	/////////////
 	
 	@Override
-	public FREObject call(FREContext c, FREObject[] args) {
+	public FREObject call(FREContext c, final FREObject[] args) {
 		
 		context = (InAppPurchaseExtensionContext) c;
 		
-		String productId = null;
-		String payload = null;
-		Bundle buyIntentBundle = null;
-		
-		// Retrieving the desired product ID.
-		try {
-			productId = args[0].getAsString();
-			payload = args[1].getAsString();
-		}
-		catch(Exception e) { InAppPurchaseExtension.logToAS("Error while retrieving the product ID! " + e.toString()); context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASE_FAILURE, e.toString()); return null;}
-		
-		try {
-			buyIntentBundle = context.getInAppBillingService().getBuyIntent(InAppPurchaseExtension.API_VERSION, context.getActivity().getPackageName(), productId, "inapp", payload);
-		}
-		catch(Exception e) { InAppPurchaseExtension.logToAS("Error while the buy intent! " + e.toString()); context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASE_FAILURE, e.toString()); return null;}
-		
-		
-		int responseCode = buyIntentBundle.getInt(RESPONSE_CODE);
-		if(responseCode == 0) {
-			
-			// Everything's fine, starting the buy intent.
-			PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
-			try {
+		context.executeWithService(new Runnable() {
+			@Override
+			public void run() {
+				String productId = null;
+				String payload = null;
+				Bundle buyIntentBundle = null;
 				
-				// Creates the new activity to do the billing process, and adding it the extra info to start the request.
-				Intent intent = new Intent(context.getActivity(), BillingActivity.class);
-				intent.putExtra("PENDING_INTENT", pendingIntent);
-				intent.putExtra("REQUEST_CODE", BUY_REQUEST_CODE);
-				intent.putExtra("DEV_PAYLOAD", payload);
-				context.getActivity().startActivity(intent);
-			}
-			catch(Exception e) { 
-					InAppPurchaseExtension.logToAS("Error while the buy intent!\n " + e.toString() + "\n" + InAppPurchaseExtension.getStackString(e));
-					context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASE_FAILURE, e.toString()); 
-					return null;
+				// Retrieving the desired product ID.
+				try {
+					productId = args[0].getAsString();
+					payload = args[1].getAsString();
 				}
-		}
-		else {
-			InAppPurchaseExtension.logToAS("Error while the buy intent : " + ERRORS_MESSAGES.get(responseCode));
-		}
+				catch(Exception e) { 
+					InAppPurchaseExtension.logToAS("Error while retrieving the product ID! " + e.toString()); 
+					context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASE_FAILURE, e.toString()); 
+					return;
+				}
+				
+				try {
+					buyIntentBundle = context.getInAppBillingService().getBuyIntent(InAppPurchaseExtension.API_VERSION, context.getActivity().getPackageName(), productId, "inapp", payload);
+				}
+				catch(Exception e) { 
+					InAppPurchaseExtension.logToAS("Error while the buy intent! " + e.toString()); 
+					context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASE_FAILURE, e.toString()); 
+					return;
+				}
+				
+				
+				int responseCode = buyIntentBundle.getInt(RESPONSE_CODE);
+				if(responseCode == 0) {
+					
+					// Everything's fine, starting the buy intent.
+					PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
+					try {
+						
+						// Creates the new activity to do the billing process, and adding it the extra info to start the request.
+						Intent intent = new Intent(context.getActivity(), BillingActivity.class);
+						intent.putExtra("PENDING_INTENT", pendingIntent);
+						intent.putExtra("REQUEST_CODE", BUY_REQUEST_CODE);
+						intent.putExtra("DEV_PAYLOAD", payload);
+						context.getActivity().startActivity(intent);
+					}
+					catch(Exception e) { 
+							InAppPurchaseExtension.logToAS("Error while the buy intent!\n " + e.toString() + "\n" + InAppPurchaseExtension.getStackString(e));
+							context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASE_FAILURE, e.toString()); 
+							return;
+						}
+				}
+				else {
+					InAppPurchaseExtension.logToAS("Error while the buy intent : " + ERRORS_MESSAGES.get(responseCode));
+				}
+			}
+		});
 		
 		return null;
 	}
@@ -170,56 +183,61 @@ public class InAppPurchaseBuyProductFunction implements FREFunction {
 	 * <li> playStoreResponse : the stringified JSON object purchase, in case you may need all the information.</li></ul><br/>
 	 */
 	
-	public static void consumeProduct(JSONObject purchase, InAppPurchaseExtensionContext c, String originalPurchaseData, String dataSignature) {
+	public static void consumeProduct(final JSONObject purchase, final InAppPurchaseExtensionContext c, final String originalPurchaseData, final String dataSignature) {
 		
-		// The local variables used in the asynchronous task.
-		final JSONObject item = purchase;
-		final InAppPurchaseExtensionContext context = c;
-		final Activity activity = c.getActivity();
-		final String playStoreResponse = originalPurchaseData;
-		final String signature = dataSignature;
-		
-		// The consumePurchase method is synchronous, so it has to be executed in an asynchronous task to avoid blocking the main thread.
-		(new AsyncTask<Void, Void, Void>() {
+		context.executeWithService(new Runnable() {
 			@Override
-			protected Void doInBackground(Void... params) {
-				int response = -1;
-				try {
-					response = context.getInAppBillingService().consumePurchase(InAppPurchaseExtension.API_VERSION, activity.getPackageName(), item.getString("purchaseToken"));
-				}
-				catch(Exception e) { 
-					InAppPurchaseExtension.logToAS("The consume product has failed!");
-					context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASE_FAILURE, "The consume product has failed!");
-					return null;
-				}
+			public void run() {
+				// The local variables used in the asynchronous task.
+				final JSONObject item = purchase;
+				final InAppPurchaseExtensionContext context = c;
+				final Activity activity = c.getActivity();
+				final String playStoreResponse = originalPurchaseData;
+				final String signature = dataSignature;
 				
-				if(response == 0) {
-					try {
-						JSONObject data = new JSONObject();
-						data.put("productId", item.getString("productId"));
-						data.put("transactionTimestamp", item.getInt("purchaseTime"));
-						data.put("developerPayload", item.get("developerPayload"));
-						data.put("purchaseToken", item.get("purchaseToken"));
-						data.put("orderId", item.get("orderId"));
-						data.put("signature", signature);
-						data.put("playStoreResponse", playStoreResponse);
+				// The consumePurchase method is synchronous, so it has to be executed in an asynchronous task to avoid blocking the main thread.
+				(new AsyncTask<Void, Void, Void>() {
+					@Override
+					protected Void doInBackground(Void... params) {
+						int response = -1;
+						try {
+							response = context.getInAppBillingService().consumePurchase(InAppPurchaseExtension.API_VERSION, activity.getPackageName(), item.getString("purchaseToken"));
+						}
+						catch(Exception e) { 
+							InAppPurchaseExtension.logToAS("The consume product has failed!");
+							context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASE_FAILURE, "The consume product has failed!");
+							return null;
+						}
 						
-						InAppPurchaseExtension.logToAS("The product has been successfully consumed! returning it with the event ...");
-						context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASE_SUCCESS, data.toString());
+						if(response == 0) {
+							try {
+								JSONObject data = new JSONObject();
+								data.put("productId", item.getString("productId"));
+								data.put("transactionTimestamp", item.getInt("purchaseTime"));
+								data.put("developerPayload", item.get("developerPayload"));
+								data.put("purchaseToken", item.get("purchaseToken"));
+								data.put("orderId", item.get("orderId"));
+								data.put("signature", signature);
+								data.put("playStoreResponse", playStoreResponse);
+								
+								InAppPurchaseExtension.logToAS("The product has been successfully consumed! returning it with the event ...");
+								context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASE_SUCCESS, data.toString());
+							}
+							catch(Exception e) {
+								InAppPurchaseExtension.logToAS("The consume product has failed!");
+								context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASE_FAILURE, "The consume product has failed!");
+							}
+						}
+						else {
+							InAppPurchaseExtension.logToAS("The consume product has failed!");
+							context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASE_FAILURE, "The consume product has failed!");
+						}
+						
+						return null;
 					}
-					catch(Exception e) {
-						InAppPurchaseExtension.logToAS("The consume product has failed!");
-						context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASE_FAILURE, "The consume product has failed!");
-					}
-				}
-				else {
-					InAppPurchaseExtension.logToAS("The consume product has failed!");
-					context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASE_FAILURE, "The consume product has failed!");
-				}
-				
-				return null;
+				}).execute();
 			}
-		}).execute();
+		});
 	}
 	
 	
@@ -235,35 +253,40 @@ public class InAppPurchaseBuyProductFunction implements FREFunction {
 	 * calling the <code>buyProduct</code> method. Consumes the product, otherwise the product will be "blocked" as it
 	 * cannot be bought again if not consumed, and dispatches a purchase failed event.
 	 */
-	private static void onPurchaseVerificationFailed(JSONObject item, String packageName) {
+	private static void onPurchaseVerificationFailed(final JSONObject item, final String packageName) {
 		
-		// The local variables used in the asynchronous task.
-		final JSONObject _item = item;
-		final String _packageName = packageName;
-		
-		// The consumePurchase method is synchronous, so it has to be executed in an asynchronous task to avoid blocking the main thread.
-				(new AsyncTask<Void, Void, Void>() {
-					@Override
-					protected Void doInBackground(Void... params) {
-						int response = -1;
-						try {
-							response = context.getInAppBillingService().consumePurchase(InAppPurchaseExtension.API_VERSION, _packageName, _item.getString("purchaseToken"));
-						}
-						catch(Exception e) { 
-							InAppPurchaseExtension.logToAS(InAppPurchaseExtension.getStackString(e));
-						}
-						
-						if(response != 0) {
-							InAppPurchaseExtension.logToAS("Failed to consume a non-verified purchase!");
-							context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASE_FAILURE, "Failed to consume a non-verified purchase!");
-						}
-						else {
-							InAppPurchaseExtension.logToAS("Received a purchase with an unknown payload! Purchase aborted and successfully consumed.");
-							context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASE_FAILURE, "Received a purchase with an unknown payload! Purchase aborted and successfully consumed.");
-						}
-						return null;
-					}
-				}).execute();
+		context.executeWithService(new Runnable() {
+			@Override
+			public void run() {
+				// The local variables used in the asynchronous task.
+				final JSONObject _item = item;
+				final String _packageName = packageName;
+				
+				// The consumePurchase method is synchronous, so it has to be executed in an asynchronous task to avoid blocking the main thread.
+						(new AsyncTask<Void, Void, Void>() {
+							@Override
+							protected Void doInBackground(Void... params) {
+								int response = -1;
+								try {
+									response = context.getInAppBillingService().consumePurchase(InAppPurchaseExtension.API_VERSION, _packageName, _item.getString("purchaseToken"));
+								}
+								catch(Exception e) { 
+									InAppPurchaseExtension.logToAS(InAppPurchaseExtension.getStackString(e));
+								}
+								
+								if(response != 0) {
+									InAppPurchaseExtension.logToAS("Failed to consume a non-verified purchase!");
+									context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASE_FAILURE, "Failed to consume a non-verified purchase!");
+								}
+								else {
+									InAppPurchaseExtension.logToAS("Received a purchase with an unknown payload! Purchase aborted and successfully consumed.");
+									context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASE_FAILURE, "Received a purchase with an unknown payload! Purchase aborted and successfully consumed.");
+								}
+								return null;
+							}
+						}).execute();
+			}
+		});
 	}
 
 }

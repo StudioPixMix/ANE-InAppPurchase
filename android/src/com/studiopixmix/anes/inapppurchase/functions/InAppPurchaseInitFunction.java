@@ -41,42 +41,48 @@ public class InAppPurchaseInitFunction implements FREFunction {
 	 */
 	public static void checkPreviousPurchases(InAppPurchaseExtensionContext context) {
 		
-		// The local variables used in the asynchronous task.
 		final InAppPurchaseExtensionContext c = context;
-		final String packageName = c.getActivity().getPackageName();
-		final IInAppBillingService iapService = c.getInAppBillingService();
 		
-		// The getSkuDetails method is synchronous, so it has to be executed in an asynchronous task to avoid blocking the main thread.
-		(new AsyncTask<Void, Void, Void>() {
+		c.executeWithService(new Runnable() {
 			@Override
-			protected Void doInBackground(Void... params) {
-				try {
-					
-					InAppPurchaseExtension.logToAS("Trying to finalize incomplete previous purchases ...");
-					Bundle previousPurchases = iapService.getPurchases(InAppPurchaseExtension.API_VERSION, packageName, "inapp", null);
-					
-					ArrayList<String> itemsJson = previousPurchases.getStringArrayList("INAPP_PURCHASE_DATA_LIST");
-					ArrayList<String> dataSignatures = previousPurchases.getStringArrayList("INAPP_DATA_SIGNATURE_LIST");
-					
-					int i, n = itemsJson.size();
-					
-					if(n > 0) {
-						for(i = 0 ; i < n ; i++) {
-							InAppPurchaseBuyProductFunction.consumeProduct(new JSONObject(itemsJson.get(i)), c, itemsJson.get(i), dataSignatures.get(i));
+			public void run() {
+				// The local variables used in the asynchronous task.
+				final String packageName = c.getActivity().getPackageName();
+				final IInAppBillingService iapService = c.getInAppBillingService();
+				
+				// The getSkuDetails method is synchronous, so it has to be executed in an asynchronous task to avoid blocking the main thread.
+				(new AsyncTask<Void, Void, Void>() {
+					@Override
+					protected Void doInBackground(Void... params) {
+						try {
+							
+							InAppPurchaseExtension.logToAS("Trying to finalize incomplete previous purchases ...");
+							Bundle previousPurchases = iapService.getPurchases(InAppPurchaseExtension.API_VERSION, packageName, "inapp", null);
+							
+							ArrayList<String> itemsJson = previousPurchases.getStringArrayList("INAPP_PURCHASE_DATA_LIST");
+							ArrayList<String> dataSignatures = previousPurchases.getStringArrayList("INAPP_DATA_SIGNATURE_LIST");
+							
+							int i, n = itemsJson.size();
+							
+							if(n > 0) {
+								for(i = 0 ; i < n ; i++) {
+									InAppPurchaseBuyProductFunction.consumeProduct(new JSONObject(itemsJson.get(i)), c, itemsJson.get(i), dataSignatures.get(i));
+								}
+								
+								InAppPurchaseExtension.logToAS(n + " previous item(s) has been consumed.");
+							}
+							else
+								InAppPurchaseExtension.logToAS("No previous purchase consumption is pending, everything's fine.");
+						}
+						catch(Exception e) {
+							InAppPurchaseExtension.logToAS("The previous purchases check has failed! " + e.toString());
 						}
 						
-						InAppPurchaseExtension.logToAS(n + " previous item(s) has been consumed.");
+						return null;
 					}
-					else
-						InAppPurchaseExtension.logToAS("No previous purchase consumption is pending, everything's fine.");
-				}
-				catch(Exception e) {
-					InAppPurchaseExtension.logToAS("The previous purchases check has failed! " + e.toString());
-				}
-				
-				return null;
+				}).execute();
 			}
-		}).execute();
+		});
 	}
 
 }
