@@ -22,6 +22,10 @@ package com.studiopixmix.anes.InAppPurchase.event
 		public static const PURCHASE_SUCCESS:String = "EVENT_PURCHASE_SUCCESS";
 		/** Event dispatched when one or more invalid product(s) have been passed to getProducts or buyProducts. */
 		public static const PRODUCTS_INVALID:String = "EVENT_PRODUCTS_INVALID";
+		/** Event dispatched when a product consumption succeeded. */
+		public static const CONSUME_SUCCESS:String = "EVENT_CONSUME_SUCCESS";
+		/** Event dispatched when a product consumption has failed. */
+		public static const CONSUME_FAILED:String = "EVENT_CONSUME_FAILED";
 		/** Event dispatched when calling the <code>restorePurchase</code> function. Dispatched after having requested the store for the user's previous purchases. */
 		public static const PURCHASES_RETRIEVED:String = "EVENT_PURCHASES_RETRIEVED";
 		/** Event dispatched when the call to <code>getPurchases</code> failed. */
