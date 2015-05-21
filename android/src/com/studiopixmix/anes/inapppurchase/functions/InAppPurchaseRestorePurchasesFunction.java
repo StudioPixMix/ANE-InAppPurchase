@@ -76,16 +76,19 @@ public class InAppPurchaseRestorePurchasesFunction implements FREFunction {
 					return;
 				}
 				
-				if(purchaseIds == null) {
+				if(purchaseIds == null || purchaseIds.size() == 0) {
 					InAppPurchaseExtension.logToAS("no purchases to restore, returning ...");
 					context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASES_RETRIEVED, null);
 					return;
 				}
 				
-				InAppPurchaseExtension.logToAS("Found " + purchaseIds.size() + " purchases to restore ... returning their IDs.");
+				// We have at least 1 purchase to restore.
+				String purchases = purchaseIds.get(0);
+				for(int i = 1 ; i < purchaseIds.size() ; i++)
+					purchases += "," + purchaseIds.get(i);
 				
-				String finalJSON = (new JSONArray(purchaseIds)).toString();
-				context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASES_RETRIEVED, finalJSON);
+				InAppPurchaseExtension.logToAS("Found " + purchaseIds.size() + " purchases to restore ... returning their IDs : " + purchases);
+				context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASES_RETRIEVED, purchases);
 			}
 		});
 		
