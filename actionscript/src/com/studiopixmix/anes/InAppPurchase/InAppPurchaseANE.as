@@ -91,12 +91,12 @@ package com.studiopixmix.anes.InAppPurchase
 		}
 		
 		/**
-		 * Android only. Consumes the given product, and dispatches CONSUME_SUCCESS event, or CONSUME_FAILURE following the returned value.
+		 * Android only. Consumes the purchase associated to the given purchase token, and dispatches CONSUME_SUCCESS event, or CONSUME_FAILURE following the returned value.
 		 * This method should be used for products that can be bought several times. On Android, once this kind of items is bought, it must
 		 * be consumed to be purchased again. You can either call this method by yourself or set the <code>autoConsume</code> parameter of
 		 * <code>buyProduct</code> to true. 
 		 */
-		public function consumeProduct(purchaseToken:String):void {
+		public function consumePurchase(purchaseToken:String):void {
 			if(!isSupported())
 				return;
 			
