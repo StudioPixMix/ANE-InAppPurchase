@@ -48,7 +48,7 @@ package com.studiopixmix.anes.InAppPurchase
 			
 			newPurchase.productId = jsonPurchase.productId;
 			newPurchase.transactionDate = new Date();
-			newPurchase.transactionDate.setTime(jsonPurchase.transactionTimestamp);
+			newPurchase.transactionDate.setTime(jsonPurchase.transactionTimestamp * 1000);
 			newPurchase.applicationUsername = jsonPurchase.hasOwnProperty("applicationUsername") ? jsonPurchase.applicationUsername : "";
 			newPurchase.transactionId = jsonPurchase.hasOwnProperty("transactionId") ? jsonPurchase.transactionId : "";
 			newPurchase.transactionReceipt = jsonPurchase.hasOwnProperty("transactionReceipt") ? jsonPurchase.transactionReceipt : "";
