@@ -5,6 +5,8 @@ package com.studiopixmix.anes.InAppPurchase
 	import com.studiopixmix.anes.InAppPurchase.event.ProductsInvalidEvent;
 	import com.studiopixmix.anes.InAppPurchase.event.ProductsLoadedEvent;
 	import com.studiopixmix.anes.InAppPurchase.event.PurchaseCanceledEvent;
+	import com.studiopixmix.anes.InAppPurchase.event.PurchaseConsumeFailureEvent;
+	import com.studiopixmix.anes.InAppPurchase.event.PurchaseConsumeSuccessEvent;
 	import com.studiopixmix.anes.InAppPurchase.event.PurchaseFailureEvent;
 	import com.studiopixmix.anes.InAppPurchase.event.PurchaseSuccessEvent;
 	import com.studiopixmix.anes.InAppPurchase.event.PurchasesRetrievedEvent;
@@ -27,6 +29,7 @@ package com.studiopixmix.anes.InAppPurchase
 		private static const NATIVE_METHOD_GET_PRODUCTS:String = "getProducts";
 		private static const NATIVE_METHOD_INITIALIZE:String = "initialize";
 		private static const NATIVE_METHOD_BUY_PRODUCT:String = "buyProduct";
+		private static const NATIVE_METHOD_CONSUME_PRODUCT:String = "consumeProduct";
 		private static const NATIVE_METHOD_RESTORE_PURCHASES:String = "restorePurchase";
 		
 		// PROPERTIES
@@ -88,6 +91,26 @@ package com.studiopixmix.anes.InAppPurchase
 		}
 		
 		/**
+		 * Android only. Consumes the purchase associated to the given purchase token, and dispatches CONSUME_SUCCESS event, or CONSUME_FAILURE following the returned value.
+		 * This method should be used for products that can be bought several times. On Android, once this kind of items is bought, it must
+		 * be consumed to be purchased again. You can either call this method by yourself or set the <code>autoConsume</code> parameter of
+		 * <code>buyProduct</code> to true. 
+		 */
+		public function consumePurchase(purchaseToken:String):void {
+			if(!isSupported())
+				return;
+			
+			// We only consume products on Android. Dispatching a success event if the device is ios.
+			if(Capabilities.manufacturer.toLowerCase().indexOf("ios") > -1) {
+				dispatchEvent(new PurchaseConsumeSuccessEvent(purchaseToken));
+				return;
+			}
+			
+			extContext.call(NATIVE_METHOD_CONSUME_PRODUCT, purchaseToken);
+		}
+		
+		
+		/**
 		 * Requests the native store to get the user's previous purchases. This will return a list of product IDs previously purchased
 		 * on the store by the current user. You can use this list in your app to update the unlocked content of your player, for example.
 		 * Dispatches PURCHASES_RETRIEVED or PURCHASES_RETRIEVING_FAILED events.
@@ -131,6 +154,10 @@ package com.studiopixmix.anes.InAppPurchase
 				eventToDispatch = PurchaseCanceledEvent.FromStatusEvent(event);
 			else if (event.code == InAppPurchaseANEEvent.PURCHASE_FAILURE)
 				eventToDispatch = PurchaseFailureEvent.FromStatusEvent(event);
+			else if (event.code == InAppPurchaseANEEvent.CONSUME_SUCCESS)
+				eventToDispatch = PurchaseConsumeSuccessEvent.FromStatusEvent(event);
+			else if (event.code == InAppPurchaseANEEvent.CONSUME_FAILED)
+				eventToDispatch = PurchaseConsumeFailureEvent.FromStatusEvent(event);
 			else if (event.code == InAppPurchaseANEEvent.PURCHASES_RETRIEVED)
 				eventToDispatch = PurchasesRetrievedEvent.FromStatusEvent(event);
 			else if (event.code == InAppPurchaseANEEvent.PURCHASES_RETRIEVING_FAILED)

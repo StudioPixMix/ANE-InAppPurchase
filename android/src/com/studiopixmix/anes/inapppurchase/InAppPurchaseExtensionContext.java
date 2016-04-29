@@ -13,6 +13,7 @@ import com.adobe.fre.FREContext;
 import com.adobe.fre.FREFunction;
 import com.android.vending.billing.IInAppBillingService;
 import com.studiopixmix.anes.inapppurchase.functions.InAppPurchaseBuyProductFunction;
+import com.studiopixmix.anes.inapppurchase.functions.InAppPurchaseConsumeProductFunction;
 import com.studiopixmix.anes.inapppurchase.functions.InAppPurchaseGetProductsFunction;
 import com.studiopixmix.anes.inapppurchase.functions.InAppPurchaseInitFunction;
 import com.studiopixmix.anes.inapppurchase.functions.InAppPurchaseRestorePurchasesFunction;
@@ -64,7 +65,6 @@ public class InAppPurchaseExtensionContext extends FREContext {
 		   @Override
 		   public void onServiceConnected(ComponentName name, IBinder service) {
 		       mService = IInAppBillingService.Stub.asInterface(service);
-		       checkPreviousPurchases();
 		       InAppPurchaseExtension.logToAS("Service connected.");
 		       
 		       processTasksQueue();
@@ -128,14 +128,6 @@ public class InAppPurchaseExtensionContext extends FREContext {
 		return this.mServiceConn;
 	}
 	
-	/**
-	 * Executes the <code>InAppPurchaseInitFunction</code>'s <code>checkPreviousPurchases</code> method
-	 * with this as the given context. This method is called each time the mService is set.
-	 */
-	public void checkPreviousPurchases() {
-		InAppPurchaseInitFunction.checkPreviousPurchases(this);
-	}
-	
 	
 	/////////////////
 	// FRE METHODS //
@@ -163,6 +155,7 @@ public class InAppPurchaseExtensionContext extends FREContext {
 		functions.put("initialize", new InAppPurchaseInitFunction());
 		functions.put("getProducts", new InAppPurchaseGetProductsFunction());
 		functions.put("buyProduct", new InAppPurchaseBuyProductFunction());
+		functions.put("consumeProduct", new InAppPurchaseConsumeProductFunction());
 		functions.put("restorePurchase", new InAppPurchaseRestorePurchasesFunction());
 		
 		InAppPurchaseExtension.log(functions.size() + " extension functions declared.");

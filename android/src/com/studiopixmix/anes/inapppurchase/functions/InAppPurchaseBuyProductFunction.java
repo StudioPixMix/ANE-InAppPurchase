@@ -174,7 +174,20 @@ public class InAppPurchaseBuyProductFunction implements FREFunction {
 		    			return;
 		    		}
 		    		
-		    		consumeProduct(item, context, purchaseData, dataSignature);
+		    		JSONObject jsonObject = new JSONObject();
+		    		try{
+			    		jsonObject.put("productId", item.getString("productId"));
+			    		jsonObject.put("transactionTimestamp", item.getInt("purchaseTime"));
+			    		jsonObject.put("developerPayload", item.get("developerPayload"));
+			    		jsonObject.put("purchaseToken", item.get("purchaseToken"));
+			    		jsonObject.put("orderId", item.get("orderId"));
+			    		jsonObject.put("signature", dataSignature);
+			    		jsonObject.put("playStoreResponse", purchaseData);
+		    		}
+		    		catch(Exception e) {context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASE_FAILURE, "Error while creating the returned JSONObject!");  return;}
+					
+					InAppPurchaseExtension.logToAS("The product has been successfully bought! returning it with the event ...");
+					context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASE_SUCCESS, jsonObject.toString());
 			    	
 			    }
 			    else if(responseCode == BILLING_RESPONSE_RESULT_USER_CANCELED) {
@@ -188,80 +201,6 @@ public class InAppPurchaseBuyProductFunction implements FREFunction {
 			}
 		}
 	}
-	
-	
-	/**
-	 * Consumes the given product. This method is called at the end of each purchase, and at each initialization if the 
-	 * <code>getPurchases</code> method returned a product that has not been consumed.<br/>
-	 * If the consumption succeeded, a <code>PURCHASE_SUCCESS</code> event is dispatched, with all the data related to the product :<br/>
-	 * <ul><li> productId : the returned product ID </li>
-	 * <li> transactionTimestamp : the purchase date, formated as a Timestamp (it is a timestamp in the Google response)</li>
-	 * <li> developerPayload : the returned payload.</li>
-	 * <li> purchaseToken : the returned purchase token.</li>
-	 * <li> orderId : the returned order ID.</li>
-	 * <li> signature : the data signature associated to the given item. <b>It's up to your code to check the signature relevance</b>,
-	 * a good practice is to check the signature server-side with your own Google developer key, so it won't be possible to fake the purchases.</li>
-	 * <li> playStoreResponse : the stringified JSON object purchase, in case you may need all the information.</li></ul><br/>
-	 */
-	
-	public static void consumeProduct(JSONObject purchase, InAppPurchaseExtensionContext c, String originalPurchaseData, String dataSignature) {
-		
-		// The local variables used in the asynchronous task.
-		final JSONObject item = purchase;
-		final InAppPurchaseExtensionContext context = c;
-		final Activity activity = c.getActivity();
-		final String playStoreResponse = originalPurchaseData;
-		final String signature = dataSignature;
-		
-		context.executeWithService(new Runnable() {
-			@Override
-			public void run() {
-				
-				// The consumePurchase method is synchronous, so it has to be executed in an asynchronous task to avoid blocking the main thread.
-				(new AsyncTask<Void, Void, Void>() {
-					@Override
-					protected Void doInBackground(Void... params) {
-						int response = -1;
-						try {
-							response = context.getInAppBillingService().consumePurchase(InAppPurchaseExtension.API_VERSION, activity.getPackageName(), item.getString("purchaseToken"));
-						}
-						catch(Exception e) { 
-							InAppPurchaseExtension.logToAS("The consume product has failed!");
-							context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASE_FAILURE, "The consume product has failed!");
-							return null;
-						}
-						
-						if(response == 0) {
-							try {
-								JSONObject data = new JSONObject();
-								data.put("productId", item.getString("productId"));
-								data.put("transactionTimestamp", item.getInt("purchaseTime"));
-								data.put("developerPayload", item.get("developerPayload"));
-								data.put("purchaseToken", item.get("purchaseToken"));
-								data.put("orderId", item.get("orderId"));
-								data.put("signature", signature);
-								data.put("playStoreResponse", playStoreResponse);
-								
-								InAppPurchaseExtension.logToAS("The product has been successfully consumed! returning it with the event ...");
-								context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASE_SUCCESS, data.toString());
-							}
-							catch(Exception e) {
-								InAppPurchaseExtension.logToAS("The consume product has failed!");
-								context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASE_FAILURE, "The consume product has failed!");
-							}
-						}
-						else {
-							InAppPurchaseExtension.logToAS("The consume product has failed!");
-							context.dispatchStatusEventAsync(InAppPurchaseMessages.PURCHASE_FAILURE, "The consume product has failed!");
-						}
-						
-						return null;
-					}
-				}).execute();
-			}
-		});
-	}
-	
 	
 	
 	
